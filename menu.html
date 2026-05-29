@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="color-scheme" content="light only">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Menu – Le Reginelle</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme: light only;
+  --bordeaux:#7B1D2E;--bordeaux-dark:#4A0E1A;--bordeaux-deep:#2E0810;
+  --olive:#5C6B3A;--olive-light:#7A8B52;
+  --cream:#F4EFE3;--cream-dark:#E8DFC8;--gold:#C8A96E;
+  --noir:#1A1208;--white:#FDFAF4;
+  --border:rgba(200,169,110,0.18);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;background:#F4EFE3;}
+body{background:var(--cream);color:var(--noir);font-family:'Cormorant Garamond',serif;min-height:100vh;}
+
+/* Force light mode — override any system dark mode */
+@media (prefers-color-scheme: dark) {
+  body { background: var(--cream) !important; color: var(--noir) !important; }
+  .menu-page, .cat-section, .pizza-row { background: transparent !important; color: var(--noir) !important; }
+}
+
+/* ── HEADER ── */
+header{
+  position:sticky;top:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 2rem;height:64px;
+  background:var(--bordeaux-deep);
+  border-bottom:1px solid rgba(200,169,110,.2);
+}
+.logo-wrap{display:flex;align-items:center;gap:.75rem;text-decoration:none;}
+.logo-crest{width:40px;height:40px;background:transparent;border:1.5px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--gold);font-style:italic;}
+.logo-name{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--cream);}
+.logo-sub{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);}
+.back-link{font-size:.75rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(244,239,227,.5);text-decoration:none;display:flex;align-items:center;gap:.4rem;transition:color .2s;}
+.back-link:hover{color:var(--gold);}
+
+/* ── PAGE HERO ── */
+.page-hero{
+  background:linear-gradient(135deg,var(--bordeaux-deep),#1a0a12);
+  padding:3rem 2rem 2.5rem;text-align:center;
+  border-bottom:1px solid rgba(200,169,110,.15);
+}
+.page-hero-label{font-size:.72rem;letter-spacing:.45em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem;}
+.page-hero-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3.5rem);font-style:italic;font-weight:700;color:var(--cream);line-height:1.1;}
+.page-hero-sub{font-size:1rem;color:rgba(244,239,227,.5);margin-top:.5rem;font-style:italic;}
+
+/* ── STICKY CATEGORY NAV ── */
+.cat-nav{
+  position:sticky;top:64px;z-index:50;
+  background:var(--white);
+  border-bottom:2px solid var(--border);
+  overflow-x:auto;scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+}
+.cat-nav::-webkit-scrollbar{display:none;}
+.cat-nav-inner{
+  display:flex;gap:0;
+  padding:0 1.5rem;
+  white-space:nowrap;
+}
+.cat-link{
+  padding:.75rem 1.2rem;
+  font-family:'Cormorant Garamond',serif;
+  font-size:.75rem;letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(26,18,8,.45);text-decoration:none;
+  border-bottom:2px solid transparent;margin-bottom:-2px;
+  transition:all .2s;white-space:nowrap;flex-shrink:0;
+}
+.cat-link:hover,.cat-link.active{color:var(--bordeaux);border-bottom-color:var(--bordeaux);}
+
+/* ── MAIN ── */
+.menu-page{max-width:900px;margin:0 auto;padding:2.5rem 1.5rem 5rem;background:var(--cream);}
+
+/* ── CATEGORY SECTION ── */
+.cat-section{margin-bottom:3.5rem;background:transparent;}
+
+.cat-header{
+  display:flex;align-items:center;gap:1rem;
+  margin-bottom:1.5rem;
+  padding-bottom:.8rem;
+  border-bottom:2px solid var(--bordeaux);
+}
+.cat-icon{font-size:1.5rem;}
+.cat-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(1.4rem,3vw,2rem);
+  font-style:italic;font-weight:700;
+  color:var(--bordeaux-dark);
+  -webkit-text-fill-color:var(--bordeaux-dark);
+}
+.cat-count{
+  font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(26,18,8,.35);margin-left:auto;-webkit-text-fill-color:rgba(26,18,8,.35);
+}
+
+/* ── PIZZA ITEM ── */
+.pizza-row{
+  display:flex;align-items:baseline;
+  gap:1rem;padding:.9rem 0;
+  border-bottom:1px solid rgba(200,169,110,.12);
+  transition:background .15s;
+  background: transparent;
+}
+.pizza-row:last-child{border-bottom:none;}
+.pizza-row:hover{background:rgba(200,169,110,.04);margin:0 -.5rem;padding-left:.5rem;padding-right:.5rem;border-radius:4px;}
+
+.pizza-info{flex:1;min-width:0;}
+.pizza-name-menu{
+  font-family:'Playfair Display',serif;
+  font-size:1.05rem;font-style:italic;font-weight:700;
+  color:var(--bordeaux-dark);margin-bottom:.15rem;
+  -webkit-text-fill-color: var(--bordeaux-dark);
+}
+.pizza-desc-menu{
+  font-size:.88rem;font-weight:300;
+  color:rgba(26,18,8,.6);line-height:1.45;-webkit-text-fill-color:rgba(26,18,8,.6);
+}
+.pizza-dots{
+  flex:1;border-bottom:1px dotted rgba(200,169,110,.3);
+  margin-bottom:.3rem;min-width:20px;
+}
+.pizza-price-menu{
+  font-family:'Playfair Display',serif;
+  font-size:1rem;font-weight:700;
+  color:var(--bordeaux);flex-shrink:0;
+  white-space:nowrap;-webkit-text-fill-color:var(--bordeaux);
+}
+
+/* ── ORDER CTA BANNER ── */
+.order-banner{
+  background:var(--bordeaux-deep);
+  border-radius:8px;padding:2rem;
+  text-align:center;margin-top:2rem;
+  border:1px solid rgba(200,169,110,.2);
+}
+.order-banner-title{
+  font-family:'Playfair Display',serif;
+  font-size:1.4rem;font-style:italic;font-weight:700;
+  color:var(--cream);margin-bottom:.5rem;
+}
+.order-banner-sub{font-size:.95rem;color:rgba(244,239,227,.5);margin-bottom:1.5rem;}
+.order-banner-btns{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap;}
+.btn-banner{
+  padding:.8rem 1.8rem;border-radius:3px;
+  font-family:'Cormorant Garamond',serif;
+  font-size:.82rem;letter-spacing:.18em;text-transform:uppercase;font-weight:700;
+  cursor:pointer;text-decoration:none;transition:all .22s;
+  display:inline-flex;align-items:center;gap:.4rem;
+}
+.btn-banner.solid{background:var(--bordeaux);border:1.5px solid var(--gold);color:var(--gold);}
+.btn-banner.solid:hover{background:var(--gold);color:var(--bordeaux-deep);}
+.btn-banner.ghost{background:transparent;border:1.5px solid rgba(244,239,227,.3);color:rgba(244,239,227,.7);}
+.btn-banner.ghost:hover{border-color:var(--cream);color:var(--cream);}
+
+@media(max-width:600px){
+  header{padding:0 1rem;}
+  .menu-page{padding:1.5rem .8rem 4rem;}
+  .cat-nav-inner{padding:0 .8rem;}
+  .cat-link{padding:.7rem .9rem;font-size:.68rem;}
+  .pizza-row{flex-wrap:wrap;gap:.3rem;}
+  .pizza-dots{display:none;}
+  .pizza-price-menu{font-size:.95rem;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo-wrap">
+    <div class="logo-crest">R</div>
+    <div>
+      <div class="logo-name">Le Reginelle</div>
+      <div class="logo-sub">Pizzeria · Verona</div>
+    </div>
+  </a>
+  <a href="index.html" class="back-link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    Home
+  </a>
+</header>
+
+<div class="page-hero">
+  <div class="page-hero-label">Via Leonardo Da Vinci, 31b · Verona</div>
+  <h1 class="page-hero-title">Il nostro menu</h1>
+  <p class="page-hero-sub">Impasto a lievitazione naturale 48h · Forno a legna</p>
+</div>
+
+<!-- CATEGORY NAV -->
+<nav class="cat-nav">
+  <div class="cat-nav-inner">
+    <a class="cat-link active" href="#classiche">Classiche</a>
+    <a class="cat-link" href="#speciali">Speciali</a>
+    <a class="cat-link" href="#provola">Con Provola</a>
+    <a class="cat-link" href="#formaggi">Formaggi</a>
+    <a class="cat-link" href="#speck">Speck</a>
+    <a class="cat-link" href="#premium">Premium</a>
+    <a class="cat-link" href="#ripiene">Ripiene</a>
+    <a class="cat-link" href="#piadepizze">Piadepizze</a>
+    <a class="cat-link" href="#saltimbocca">Saltimbocca</a>
+  </div>
+</nav>
+
+<div class="menu-page">
+
+  <!-- CLASSICHE -->
+  <div class="cat-section" id="classiche">
+    <div class="cat-header">
+      <span class="cat-icon">🍕</span>
+      <span class="cat-title">Pizze Classiche</span>
+      <span class="cat-count">10 pizze</span>
+    </div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Marinara</div><div class="pizza-desc-menu">Pomodoro, aglio, origano e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 6,00</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Marinara Extra</div><div class="pizza-desc-menu">Pomodorini cotti, aglio, origano e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 7,00</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Margherita</div><div class="pizza-desc-menu">Pomodoro, mozzarella fiordilatte, basilico e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 7,00</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Bufalina</div><div class="pizza-desc-menu">Pomodoro, mozzarella di bufala, basilico e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 10,50</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Romana</div><div class="pizza-desc-menu">Pomodoro, origano, aglio, acciughe, capperi, olive nere e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 8,50</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Prosciutto</div><div class="pizza-desc-menu">Pomodoro, mozzarella fiordilatte, prosciutto cotto e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 8,50</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Funghi</div><div class="pizza-desc-menu">Pomodoro, mozzarella fiordilatte, funghi champignon e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 8,50</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Diavola</div><div class="pizza-desc-menu">Pomodoro, mozzarella fiordilatte, salame piccante e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 9,00</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Maruzzella</div><div class="pizza-desc-menu">Pomodoro, mozzarella fiordilatte, acciughe, origano, olive nere e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 8,50</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Capricciosa</div><div class="pizza-desc-menu">Pomodoro, mozzarella fiordilatte, prosciutto cotto, carciofini, funghi champignon e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 10,50</div></div>
+  </div>
+
+  <!-- SPECIALI -->
+  <div class="cat-section" id="speciali">
+    <div class="cat-header">
+      <span class="cat-icon">⭐</span>
+      <span class="cat-title">Pizze Speciali</span>
+      <span class="cat-count">8 pizze</span>
+    </div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Pugliese</div><div class="pizza-desc-menu">Pomodorini, mozzarella fiordilatte, tonno, cipolla, olive nere e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 10,50</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Siciliana</div><div class="pizza-desc-menu">Pomodorini cotti, mozzarella fiordilatte, prosciutto cotto, melanzane fritte, scaglie di pecorino e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 10,00</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Cafona</div><div class="pizza-desc-menu">Pomodoro, mozzarella fiordilatte, salsiccia, peperoni, gorgonzola e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 10,50</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Contadina</div><div class="pizza-desc-menu">Pomodoro, mozzarella fiordilatte, salsiccia, funghi porcini, cipolla rossa e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 11,00</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Bergamasca</div><div class="pizza-desc-menu">Pomodoro, mozzarella fiordilatte, gorgonzola, salame piccante e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 10,00</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Scarpetta</div><div class="pizza-desc-menu">Pomodorini cotti, mozzarella fiordilatte, formaggio pecorino, pepe, basilico e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 9,50</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Pub</div><div class="pizza-desc-menu">Pomodoro, mozzarella fiordilatte, wurstel, patatine fritte e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 9,50</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Ortolana</div><div class="pizza-desc-menu">Pomodorini, mozzarella fiordilatte, melanzane, zucchine, peperoni e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 10,50</div></div>
+  </div>
+
+  <!-- CON PROVOLA -->
+  <div class="cat-section" id="provola">
+    <div class="cat-header">
+      <span class="cat-icon">🫒</span>
+      <span class="cat-title">Con Provola Affumicata</span>
+      <span class="cat-count">10 pizze</span>
+    </div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Cafuncella</div><div class="pizza-desc-menu">Provola affumicata, patate al forno, pancetta, grana e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 10,50</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Crudo e Philadelphia</div><div class="pizza-desc-menu">Pomodoro, mozzarella fiordilatte, prosciutto crudo, philadelphia, rucola e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 11,50</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Parmigiana</div><div class="pizza-desc-menu">Parmigiana di melanzane, provola affumicata e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 10,50</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Salsiccia e Friarielli</div><div class="pizza-desc-menu">Provola affumicata, salsiccia, friarielli e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 11,50</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Scarurella</div><div class="pizza-desc-menu">Provola affumicata, scarole, olive nere, capperi, scaglie di pecorino, pinoli e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 10,00</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Casareccia</div><div class="pizza-desc-menu">Provola affumicata, patate al forno, salsiccia, funghi porcini e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 10,50</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Amalfitana</div><div class="pizza-desc-menu">Provola affumicata, limone a fettine, pepe, pesto di basilico all'uscita e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 10,00</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Genovese</div><div class="pizza-desc-menu">Ombra di pomodoro, pomodorini, provola affumicata, pesto di basilico, ricotta salata e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 10,50</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Fiocco</div><div class="pizza-desc-menu">Panna, provola affumicata, prosciutto cotto, patate schiacciate e olio evo</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 10,00</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">À Gattò</div><div class="pizza-desc-menu">Provola affumicata, salame dolce, patate schiacciate e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 10,00</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Ciccioli e Ricotta</div><div class="pizza-desc-menu">Ricotta, provola affumicata, ciccioli, pepe e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 9,50</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Pistacchiella</div><div class="pizza-desc-menu">Provola affumicata, pomodorini gialli, mortadella, granella di pistacchi e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 11,00</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Porchetta</div><div class="pizza-desc-menu">Provola, patate al forno, porchetta, funghi porcini e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 10,50</div></div>
+  </div>
+
+  <!-- FORMAGGI -->
+  <div class="cat-section" id="formaggi">
+    <div class="cat-header">
+      <span class="cat-icon">🧀</span>
+      <span class="cat-title">Ai Formaggi</span>
+      <span class="cat-count">6 pizze</span>
+    </div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Amatriciana</div><div class="pizza-desc-menu">Pomodorini cotti, guanciale, cipolla, mozzarella fiordilatte e formaggio pecorino e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 10,50</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Formaggi e Noci</div><div class="pizza-desc-menu">Mozzarella fiordilatte, crema mix di formaggi, gorgonzola, noci e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 10,00</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Formaggi e Zucchine</div><div class="pizza-desc-menu">Mix di formaggi, mozzarella fiordilatte, zucchine, philadelphia e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 10,00</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Formaggi e Pancetta</div><div class="pizza-desc-menu">Mix di formaggi, mozzarella fiordilatte, misto funghi, pancetta, philadelphia e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 10,50</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Taleggio e Porcini</div><div class="pizza-desc-menu">Mozzarella fiordilatte, funghi porcini, taleggio, prezzemolo e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 11,00</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Carbonara</div><div class="pizza-desc-menu">Provola, guanciale, tuorlo d'uovo, pepe, pecorino e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 12,50</div></div>
+  </div>
+
+  <!-- SPECK -->
+  <div class="cat-section" id="speck">
+    <div class="cat-header">
+      <span class="cat-icon">🍖</span>
+      <span class="cat-title">Con Speck</span>
+      <span class="cat-count">4 pizze</span>
+    </div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Tirolese</div><div class="pizza-desc-menu">Pomodoro, mozzarella fiordilatte, speck, funghi porcini e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 11,00</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Speck e Noci</div><div class="pizza-desc-menu">Mozzarella fiordilatte, gorgonzola, speck, noci e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 11,00</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Speck e Radicchio</div><div class="pizza-desc-menu">Mozzarella fiordilatte, speck, radicchio, panna, gorgonzola, noci e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 11,00</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Radicchio e Salamino</div><div class="pizza-desc-menu">Mozzarella fiordilatte, salamino piccante, radicchio, ricotta salata e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 11,00</div></div>
+  </div>
+
+  <!-- PREMIUM -->
+  <div class="cat-section" id="premium">
+    <div class="cat-header">
+      <span class="cat-icon">👑</span>
+      <span class="cat-title">Premium</span>
+      <span class="cat-count">12 pizze</span>
+    </div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Zingara</div><div class="pizza-desc-menu">Pomodorini, mozzarella fiordilatte, peperoni, salame piccante, olive nere e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 11,50</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Funghi e Guanciale</div><div class="pizza-desc-menu">Pomodorini, mozzarella fiordilatte, misto funghi, guanciale, petali di grana, rosmarino e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 11,50</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Primavera</div><div class="pizza-desc-menu">Pomodorini, mozzarella fiordilatte, prosciutto crudo, rucola, petali di grana e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 11,50</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Mediterranea</div><div class="pizza-desc-menu">Pomodorini gialli, mozzarella fiordilatte, acciughe, olive nere, prezzemolo e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 10,50</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Mortadella e Panzarotto</div><div class="pizza-desc-menu">Provola affumicata, mortadella, crocchè di patate, granella di pistacchi e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 11,50</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Zucca e Salsiccia</div><div class="pizza-desc-menu">Crema di zucca, provola affumicata, salsiccia, petali di grana e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 11,50</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Bufala e Radicchio</div><div class="pizza-desc-menu">Mozzarella di bufala, pomodorini, salsiccia, radicchio e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 11,50</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Bufala e Melanzane</div><div class="pizza-desc-menu">Mozzarella di bufala, melanzane, funghetti, pomodorini cotti, speck a listarelle, petali di grana e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 12,00</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Bufalina ai 2 Pomodori</div><div class="pizza-desc-menu">Mozzarella di bufala, pomodorino giallo cotto, pomodorino rosso cotto, petali di grana e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 13,50</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Patate e Guanciale</div><div class="pizza-desc-menu">Provola, sfoglia di patate al forno, guanciale, fonduta di emmental, cipolla all'uscita e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 12,50</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Zucchine e Gamberetti</div><div class="pizza-desc-menu">Pomodorini, mozzarella fiordilatte, zucchine, gamberetti, prezzemolo e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 13,00</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Ciurillo</div><div class="pizza-desc-menu">Mozzarella fiordilatte, fiori di zucca, salame Napoli, ricotta, pepe, scaglie di grana e olio extravergine d'oliva (stagionale)</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 12,50</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Tartufo e Salsiccia</div><div class="pizza-desc-menu">Mozzarella fiordilatte, fonduta di bufala, salsiccia, crema di tartufo, petali di grana e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 13,00</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Tartufo e Pancetta</div><div class="pizza-desc-menu">Provola affumicata, pancetta, patate schiacciate, crema di tartufo, petali di grana e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 13,00</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Gorgonzola e Pere</div><div class="pizza-desc-menu">Provola affumicata, gorgonzola, pere, fonduta di bufala, noci e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 13,00</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Salsiccia e Funghi</div><div class="pizza-desc-menu">Provola affumicata, fonduta di bufala, cipolla rossa, salsiccia, funghi misti e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 13,00</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Stracciatella e Salmone</div><div class="pizza-desc-menu">Mozzarella fiordilatte, pomodorini, salmone, stracciatella, rucola, limone a fettine e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 13,50</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Salmone e Philadelphia</div><div class="pizza-desc-menu">Mozzarella fiordilatte, pomodorini, salmone, philadelphia e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 13,50</div></div>
+  </div>
+
+  <!-- RIPIENE -->
+  <div class="cat-section" id="ripiene">
+    <div class="cat-header">
+      <span class="cat-icon">🫓</span>
+      <span class="cat-title">Pizze Ripiene</span>
+      <span class="cat-count">4 pizze</span>
+    </div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Ripieno al Salame</div><div class="pizza-desc-menu">Pomodoro, ricotta, mozzarella fiordilatte, salame dolce, pepe e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 10,50</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Ripieno al Prosciutto</div><div class="pizza-desc-menu">Pomodoro, ricotta, mozzarella fiordilatte, prosciutto, pepe e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 10,50</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Ripieno alle Scarole</div><div class="pizza-desc-menu">Pomodoro, provola affumicata, scarole, olive nere, capperi, pecorino e olio extravergine d'oliva</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 10,50</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Ripieno con Salsiccia e Friarielli</div><div class="pizza-desc-menu">Pomodoro, salsiccia, friarielli e provola</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 11,50</div></div>
+  </div>
+
+  <!-- PIADEPIZZE -->
+  <div class="cat-section" id="piadepizze">
+    <div class="cat-header">
+      <span class="cat-icon">🥙</span>
+      <span class="cat-title">Piadepizze</span>
+      <span class="cat-count">4 varianti</span>
+    </div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Prosciutto Crudo di Parma e Bufala</div><div class="pizza-desc-menu">Prosciutto crudo di Parma, mozzarella di bufala campana, pomodoro cuor di bue e insalata</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 13,50</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Crudo e Stracciatella</div><div class="pizza-desc-menu">Prosciutto crudo di Parma, stracciatella di bufala, pomodorini datterini, rucola e petali di grana padano</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 13,50</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Prosciutto Cotto e Bufala</div><div class="pizza-desc-menu">Prosciutto cotto, mozzarella di bufala, pomodorini datterini e insalata</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 12,50</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Speck e Bufala</div><div class="pizza-desc-menu">Speck, mozzarella di bufala, insalata e misto funghi</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 13,50</div></div>
+  </div>
+
+  <!-- SALTIMBOCCA -->
+  <div class="cat-section" id="saltimbocca">
+    <div class="cat-header">
+      <span class="cat-icon">🥪</span>
+      <span class="cat-title">Saltimbocca & Focacce</span>
+      <span class="cat-count">10 varianti</span>
+    </div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Salsiccia, Friarielli e Provola</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 11,00</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Mozzarella di Bufala e Prosciutto Crudo</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 11,00</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Provola, Salsiccia e Peperoni</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 11,00</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Provola, Porchetta e Funghi Misti</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 11,00</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Provola, Pancetta e Funghi Misti</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 11,00</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Mozzarella, Pancetta e Carciofini</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 11,00</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Provola, Porchetta e Friarielli</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 11,00</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Prosciutto Cotto, Mozzarella e Zucchine Grigliate</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 11,00</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Provola, Porchetta e Parmigiana</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 11,00</div></div>
+    <div class="pizza-row"><div class="pizza-info"><div class="pizza-name-menu">Zingariello</div><div class="pizza-desc-menu">Pomodorino, tonno, cipolla rossa, mozzarella di bufala e insalata</div></div><div class="pizza-dots"></div><div class="pizza-price-menu">€ 11,00</div></div>
+  </div>
+
+  <!-- ORDER CTA -->
+  <div class="order-banner">
+    <div class="order-banner-title">Hai scelto cosa mangiare?</div>
+    <div class="order-banner-sub">Ordina online per asporto o consegna a domicilio</div>
+    <div class="order-banner-btns">
+      <a href="ordine.html" class="btn-banner solid">🛵 Consegna a domicilio</a>
+      <a href="asporto.html" class="btn-banner ghost">🛍️ Asporto</a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// Highlight active category on scroll
+const sections = document.querySelectorAll('.cat-section');
+const links = document.querySelectorAll('.cat-link');
+const navTop = document.querySelector('.cat-nav').offsetTop;
+
+window.addEventListener('scroll', function() {
+  let current = '';
+  sections.forEach(s => {
+    if(window.scrollY >= s.offsetTop - 140) current = s.id;
+  });
+  links.forEach(l => {
+    l.classList.toggle('active', l.getAttribute('href') === '#' + current);
+  });
+});
+
+// Smooth scroll for cat links with offset
+links.forEach(l => {
+  l.addEventListener('click', function(e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if(target) window.scrollTo({ top: target.offsetTop - 120, behavior: 'smooth' });
+  });
+});
+
+// Logo from admin
+var logo = localStorage.getItem('rg_logo');
+if(logo) document.querySelectorAll('.logo-crest').forEach(function(el) {
+  el.innerHTML = '<img src="' + logo + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
+});
+</script>
+</body>
+</html>
