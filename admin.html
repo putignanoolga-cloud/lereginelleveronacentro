@@ -1086,16 +1086,96 @@ function showTab(id) {
 
 // ─── DEFAULT MENU ────────────────────────────────────────
 const DEFAULT_MENU = [
-  { id:1,  emoji:'🍕', name:'Margherita',           desc:'Pomodoro, fior di latte, basilico',                              price:8.50,  cat:'pizza'  },
-  { id:2,  emoji:'🍕', name:'Pub',                  desc:'Pomodoro, mozzarella, würstel, patatine fritte',                 price:9.50,  cat:'pizza'  },
-  { id:3,  emoji:'🌿', name:'Bufalina',              desc:'Pomodoro, mozzarella di bufala, basilico fresco',               price:10.50, cat:'pizza'  },
-  { id:4,  emoji:'🍄', name:'Capricciosa',           desc:'Pomodoro, mozzarella, prosciutto, funghi, olive, carciofi',     price:10.50, cat:'pizza'  },
-  { id:5,  emoji:'🫒', name:'Siciliana',             desc:'Pomodoro, mozzarella, olive, capperi, acciughe',               price:10.00, cat:'pizza'  },
-  { id:6,  emoji:'🌶️', name:'Diavola',               desc:'Pomodoro, mozzarella, salame piccante',                         price:10.00, cat:'pizza'  },
-  { id:7,  emoji:'🍃', name:'Quattro Stagioni',      desc:'Pomodoro, mozzarella, prosciutto, funghi, carciofi, olive',     price:10.50, cat:'pizza'  },
-  { id:8,  emoji:'💧', name:'Acqua naturale/frizzante', desc:'75cl',                                                       price:1.50,  cat:'extra'  },
-  { id:9,  emoji:'🍺', name:'Birra artigianale',     desc:'Birra in bottiglia',                                            price:3.50,  cat:'extra'  },
-  { id:10, emoji:'🍮', name:'Tiramisù',              desc:'Fatto in casa',                                                 price:4.00,  cat:'extra'  },
+  // CLASSICHE
+  { id:1,  emoji:'🍕', name:'Marinara',               desc:'Pomodoro, aglio, origano e olio evo',                                                    price:6.00,  cat:'Classiche' },
+  { id:2,  emoji:'🍕', name:'Marinara Extra',          desc:'Pomodorini cotti, aglio, origano e olio evo',                                            price:7.00,  cat:'Classiche' },
+  { id:3,  emoji:'🍕', name:'Margherita',              desc:'Pomodoro, mozzarella fiordilatte, basilico e olio evo',                                  price:7.00,  cat:'Classiche' },
+  { id:4,  emoji:'🌿', name:'Bufalina',                desc:'Pomodoro, mozzarella di bufala, basilico e olio evo',                                    price:10.50, cat:'Classiche' },
+  { id:5,  emoji:'🐟', name:'Romana',                  desc:'Pomodoro, origano, aglio, acciughe, capperi, olive nere e olio evo',                     price:8.50,  cat:'Classiche' },
+  { id:6,  emoji:'🍕', name:'Prosciutto',              desc:'Pomodoro, mozzarella fiordilatte, prosciutto cotto e olio evo',                          price:8.50,  cat:'Classiche' },
+  { id:7,  emoji:'🍄', name:'Funghi',                  desc:'Pomodoro, mozzarella fiordilatte, funghi champignon e olio evo',                         price:8.50,  cat:'Classiche' },
+  { id:8,  emoji:'🌶️', name:'Diavola',                 desc:'Pomodoro, mozzarella fiordilatte, salame piccante e olio evo',                           price:9.00,  cat:'Classiche' },
+  { id:9,  emoji:'🫒', name:'Maruzzella',              desc:'Pomodoro, mozzarella fiordilatte, acciughe, origano, olive nere e olio evo',              price:8.50,  cat:'Classiche' },
+  { id:10, emoji:'🍄', name:'Capricciosa',             desc:'Pomodoro, mozzarella fiordilatte, prosciutto, carciofini, funghi e olio evo',            price:10.50, cat:'Classiche' },
+  // SPECIALI
+  { id:11, emoji:'🐟', name:'Pugliese',                desc:'Pomodorini, mozzarella fiordilatte, tonno, cipolla, olive nere e olio evo',              price:10.50, cat:'Speciali' },
+  { id:12, emoji:'🍆', name:'Siciliana',               desc:'Pomodorini cotti, mozzarella, prosciutto cotto, melanzane fritte, pecorino e olio evo',  price:10.00, cat:'Speciali' },
+  { id:13, emoji:'🫑', name:'Cafona',                  desc:'Pomodoro, mozzarella fiordilatte, salsiccia, peperoni, gorgonzola e olio evo',           price:10.50, cat:'Speciali' },
+  { id:14, emoji:'🍄', name:'Contadina',               desc:'Pomodoro, mozzarella fiordilatte, salsiccia, funghi porcini, cipolla rossa e olio evo',  price:11.00, cat:'Speciali' },
+  { id:15, emoji:'🌶️', name:'Bergamasca',              desc:'Pomodoro, mozzarella fiordilatte, gorgonzola, salame piccante e olio evo',               price:10.00, cat:'Speciali' },
+  { id:16, emoji:'🧀', name:'Scarpetta',               desc:'Pomodorini cotti, mozzarella fiordilatte, pecorino, pepe, basilico e olio evo',          price:9.50,  cat:'Speciali' },
+  { id:17, emoji:'🍟', name:'Pub',                     desc:'Pomodoro, mozzarella fiordilatte, wurstel, patatine fritte e olio evo',                  price:9.50,  cat:'Speciali' },
+  { id:18, emoji:'🥦', name:'Ortolana',                desc:'Pomodorini, mozzarella fiordilatte, melanzane, zucchine, peperoni e olio evo',           price:10.50, cat:'Speciali' },
+  // CON PROVOLA
+  { id:19, emoji:'🥓', name:'Cafuncella',              desc:'Provola affumicata, patate al forno, pancetta, grana e olio evo',                        price:10.50, cat:'Con Provola' },
+  { id:80, emoji:'🌿', name:'Crudo e Philadelphia',    desc:'Pomodoro, mozzarella fiordilatte, prosciutto crudo, philadelphia, rucola e olio evo',    price:11.50, cat:'Con Provola' },
+  { id:20, emoji:'🌿', name:'Parmigiana',              desc:'Parmigiana di melanzane, provola affumicata e olio evo',                                 price:10.50, cat:'Con Provola' },
+  { id:21, emoji:'🌿', name:'Salsiccia e Friarielli',  desc:'Provola affumicata, salsiccia, friarielli e olio evo',                                   price:11.50, cat:'Con Provola' },
+  { id:22, emoji:'🫒', name:'Scarurella',              desc:'Provola affumicata, scarole, olive nere, capperi, scaglie di pecorino, pinoli e olio evo',price:10.00, cat:'Con Provola' },
+  { id:23, emoji:'🍄', name:'Casareccia',              desc:'Provola affumicata, patate al forno, salsiccia, funghi porcini e olio evo',              price:10.50, cat:'Con Provola' },
+  { id:24, emoji:'🍋', name:'Amalfitana',              desc:'Provola affumicata, limone a fettine, pepe, pesto di basilico e olio evo',               price:10.00, cat:'Con Provola' },
+  { id:25, emoji:'🌿', name:'Genovese',                desc:'Ombra di pomodoro, pomodorini, provola affumicata, pesto, ricotta salata e olio evo',    price:10.50, cat:'Con Provola' },
+  { id:26, emoji:'🥓', name:'Fiocco',                  desc:'Panna, provola affumicata, prosciutto cotto, patate schiacciate e olio evo',             price:10.00, cat:'Con Provola' },
+  { id:27, emoji:'🥔', name:'A Gatto',                 desc:'Provola affumicata, salame dolce, patate schiacciate e olio evo',                        price:10.00, cat:'Con Provola' },
+  { id:28, emoji:'🧀', name:'Ciccioli e Ricotta',      desc:'Ricotta, provola affumicata, ciccioli, pepe e olio evo',                                 price:9.50,  cat:'Con Provola' },
+  { id:29, emoji:'🌸', name:'Pistacchiella',           desc:'Provola affumicata, pomodorini gialli, mortadella, granella di pistacchi e olio evo',    price:11.00, cat:'Con Provola' },
+  { id:30, emoji:'🥩', name:'Porchetta',               desc:'Provola, patate al forno, porchetta, funghi porcini e olio evo',                         price:10.50, cat:'Con Provola' },
+  // FORMAGGI
+  { id:31, emoji:'🧀', name:'Amatriciana',             desc:'Pomodorini cotti, guanciale, cipolla, mozzarella fiordilatte, pecorino e olio evo',      price:10.50, cat:'Formaggi' },
+  { id:32, emoji:'🧀', name:'Formaggi e Noci',         desc:'Mozzarella fiordilatte, crema mix di formaggi, gorgonzola, noci e olio evo',             price:10.00, cat:'Formaggi' },
+  { id:33, emoji:'🥒', name:'Formaggi e Zucchine',     desc:'Mix di formaggi, mozzarella fiordilatte, zucchine, philadelphia e olio evo',             price:10.00, cat:'Formaggi' },
+  { id:34, emoji:'🥓', name:'Formaggi e Pancetta',     desc:'Mix di formaggi, mozzarella fiordilatte, misto funghi, pancetta, philadelphia e olio evo',price:10.50, cat:'Formaggi' },
+  { id:35, emoji:'🍄', name:'Taleggio e Porcini',      desc:'Mozzarella fiordilatte, funghi porcini, taleggio, prezzemolo e olio evo',                price:11.00, cat:'Formaggi' },
+  { id:36, emoji:'🥚', name:'Carbonara',               desc:"Provola, guanciale, tuorlo d'uovo, pepe, pecorino e olio evo",                          price:12.50, cat:'Formaggi' },
+  // CON SPECK
+  { id:37, emoji:'🍖', name:'Tirolese',                desc:'Pomodoro, mozzarella fiordilatte, speck, funghi porcini e olio evo',                     price:11.00, cat:'Con Speck' },
+  { id:38, emoji:'🥜', name:'Speck e Noci',            desc:'Mozzarella fiordilatte, gorgonzola, speck, noci e olio evo',                             price:11.00, cat:'Con Speck' },
+  { id:39, emoji:'🌿', name:'Speck e Radicchio',       desc:'Mozzarella fiordilatte, speck, radicchio, panna, gorgonzola, noci e olio evo',           price:11.00, cat:'Con Speck' },
+  { id:40, emoji:'🌿', name:'Radicchio e Salamino',    desc:'Mozzarella fiordilatte, salamino piccante, radicchio, ricotta salata e olio evo',        price:11.00, cat:'Con Speck' },
+  // PREMIUM
+  { id:41, emoji:'🌶️', name:'Zingara',                 desc:'Pomodorini, mozzarella, peperoni, salame piccante, olive nere e olio evo',               price:11.50, cat:'Premium' },
+  { id:42, emoji:'🍄', name:'Funghi e Guanciale',      desc:'Pomodorini, mozzarella, misto funghi, guanciale, petali di grana, rosmarino e olio evo', price:11.50, cat:'Premium' },
+  { id:43, emoji:'🌿', name:'Primavera',               desc:'Pomodorini, mozzarella, prosciutto crudo, rucola, petali di grana e olio evo',           price:11.50, cat:'Premium' },
+  { id:44, emoji:'🐟', name:'Mediterranea',            desc:'Pomodorini gialli, mozzarella, acciughe, olive nere, prezzemolo e olio evo',             price:10.50, cat:'Premium' },
+  { id:45, emoji:'🌸', name:'Mortadella e Panzarotto', desc:'Provola affumicata, mortadella, crocche di patate, granella di pistacchi e olio evo',    price:11.50, cat:'Premium' },
+  { id:46, emoji:'🎃', name:'Zucca e Salsiccia',       desc:'Crema di zucca, provola affumicata, salsiccia, petali di grana e olio evo',              price:11.50, cat:'Premium' },
+  { id:47, emoji:'🌿', name:'Bufala e Radicchio',      desc:'Mozzarella di bufala, pomodorini, salsiccia, radicchio e olio evo',                      price:11.50, cat:'Premium' },
+  { id:48, emoji:'🍆', name:'Bufala e Melanzane',      desc:'Mozzarella di bufala, melanzane, funghetti, pomodorini, speck, petali di grana e olio evo',price:12.00, cat:'Premium' },
+  { id:49, emoji:'🌿', name:'Bufalina ai 2 Pomodori',  desc:'Mozzarella di bufala, pomodorino giallo cotto, pomodorino rosso cotto, petali di grana e olio evo',price:13.50, cat:'Premium' },
+  { id:50, emoji:'🥔', name:'Patate e Guanciale',      desc:'Provola, sfoglia di patate al forno, guanciale, fonduta di emmental, cipolla e olio evo',price:12.50, cat:'Premium' },
+  { id:51, emoji:'🦐', name:'Zucchine e Gamberetti',   desc:'Pomodorini, mozzarella fiordilatte, zucchine, gamberetti, prezzemolo e olio evo',        price:13.00, cat:'Premium' },
+  { id:52, emoji:'🌸', name:'Ciurillo',                desc:'Mozzarella fiordilatte, fiori di zucca, salame Napoli, ricotta, pepe, scaglie di grana e olio evo (stagionale)',price:12.50, cat:'Premium' },
+  { id:53, emoji:'🍄', name:'Tartufo e Salsiccia',     desc:'Mozzarella fiordilatte, fonduta di bufala, salsiccia, crema di tartufo, petali di grana e olio evo',price:13.00, cat:'Premium' },
+  { id:54, emoji:'🥓', name:'Tartufo e Pancetta',      desc:'Provola affumicata, pancetta, patate schiacciate, crema di tartufo, petali di grana e olio evo',price:13.00, cat:'Premium' },
+  { id:55, emoji:'🍐', name:'Gorgonzola e Pere',       desc:'Provola affumicata, gorgonzola, pere, fonduta di bufala, noci e olio evo',               price:13.00, cat:'Premium' },
+  { id:56, emoji:'🍄', name:'Salsiccia e Funghi',      desc:'Provola affumicata, fonduta di bufala, cipolla rossa, salsiccia, funghi misti e olio evo',price:13.00, cat:'Premium' },
+  { id:57, emoji:'🐟', name:'Stracciatella e Salmone', desc:'Mozzarella fiordilatte, pomodorini, salmone, stracciatella, rucola, limone e olio evo',  price:13.50, cat:'Premium' },
+  { id:58, emoji:'🐟', name:'Salmone e Philadelphia',  desc:'Mozzarella fiordilatte, pomodorini, salmone, philadelphia e olio evo',                   price:13.50, cat:'Premium' },
+  // RIPIENE
+  { id:62, emoji:'🫓', name:'Ripieno al Salame',                  desc:'Pomodoro, ricotta, mozzarella fiordilatte, salame dolce, pepe e olio evo',       price:10.50, cat:'Ripiene' },
+  { id:63, emoji:'🫓', name:'Ripieno al Prosciutto',              desc:'Pomodoro, ricotta, mozzarella fiordilatte, prosciutto, pepe e olio evo',          price:10.50, cat:'Ripiene' },
+  { id:64, emoji:'🫓', name:'Ripieno alle Scarole',               desc:'Pomodoro, provola affumicata, scarole, olive nere, capperi, pecorino e olio evo', price:10.50, cat:'Ripiene' },
+  { id:65, emoji:'🫓', name:'Ripieno con Salsiccia e Friarielli', desc:'Pomodoro, salsiccia, friarielli e provola',                                        price:11.50, cat:'Ripiene' },
+  // PIADEPIZZE
+  { id:66, emoji:'🥙', name:'Prosciutto Crudo di Parma e Bufala', desc:'Prosciutto crudo di Parma, mozzarella di bufala campana, pomodoro cuor di bue e insalata', price:13.50, cat:'Piadepizze' },
+  { id:67, emoji:'🥙', name:'Crudo e Stracciatella',              desc:'Prosciutto crudo di Parma, stracciatella di bufala, pomodorini datterini, rucola e petali di grana padano', price:13.50, cat:'Piadepizze' },
+  { id:68, emoji:'🥙', name:'Prosciutto Cotto e Bufala',          desc:'Prosciutto cotto, mozzarella di bufala, pomodorini datterini e insalata',          price:12.50, cat:'Piadepizze' },
+  { id:69, emoji:'🥙', name:'Speck e Bufala',                     desc:'Speck, mozzarella di bufala, insalata e misto funghi',                             price:13.50, cat:'Piadepizze' },
+  // SALTIMBOCCA
+  { id:70, emoji:'🥪', name:'Salsiccia, Friarielli e Provola',             desc:'', price:11.00, cat:'Saltimbocca' },
+  { id:71, emoji:'🥪', name:'Mozzarella di Bufala e Prosciutto Crudo',     desc:'', price:11.00, cat:'Saltimbocca' },
+  { id:72, emoji:'🥪', name:'Provola, Salsiccia e Peperoni',               desc:'', price:11.00, cat:'Saltimbocca' },
+  { id:73, emoji:'🥪', name:'Provola, Porchetta e Funghi Misti',           desc:'', price:11.00, cat:'Saltimbocca' },
+  { id:74, emoji:'🥪', name:'Provola, Pancetta e Funghi Misti',            desc:'', price:11.00, cat:'Saltimbocca' },
+  { id:75, emoji:'🥪', name:'Mozzarella, Pancetta e Carciofini',           desc:'', price:11.00, cat:'Saltimbocca' },
+  { id:76, emoji:'🥪', name:'Provola, Porchetta e Friarielli',             desc:'', price:11.00, cat:'Saltimbocca' },
+  { id:77, emoji:'🥪', name:'Prosciutto Cotto, Mozzarella e Zucchine',     desc:'', price:11.00, cat:'Saltimbocca' },
+  { id:78, emoji:'🥪', name:'Provola, Porchetta e Parmigiana',             desc:'', price:11.00, cat:'Saltimbocca' },
+  { id:79, emoji:'🥪', name:'Zingariello',                                 desc:'Pomodorino, tonno, cipolla rossa, mozzarella di bufala e insalata', price:11.00, cat:'Saltimbocca' },
+  // EXTRA
+  { id:59, emoji:'💧', name:'Acqua naturale/frizzante', desc:'75cl',            price:1.50, cat:'extra' },
+  { id:60, emoji:'🍺', name:'Birra artigianale',         desc:'Birra in bottiglia', price:3.50, cat:'extra' },
+  { id:61, emoji:'🍮', name:'Tiramisu',                  desc:'Fatto in casa',      price:4.00, cat:'extra' },
 ];
 
 const DEFAULT_DELIVERY = { cost:2.00, alwaysFree:false, freeThreshold:20, zone:'Consegniamo in tutta Verona e dintorni. Chiama al 045 565242 per info sulla zona. Tempo medio: 30–45 minuti.' };
@@ -1197,9 +1277,18 @@ function addRowData(item, idx) {
     <td><input class="cell-input" type="text" name="desc" value="${esc(item.desc)}" placeholder="Ingredienti / descrizione"></td>
     <td><input class="cell-input cell-price" type="number" name="price" value="${item.price.toFixed(2)}" min="0" step="0.5"></td>
     <td class="td-category">
-      <select name="cat" style="border:none;background:transparent;font-family:inherit;font-size:.82rem;color:rgba(26,18,8,.4);outline:none;cursor:pointer;">
-        <option value="pizza" ${item.cat==='pizza'?'selected':''}>Pizza</option>
-        <option value="extra" ${item.cat==='extra'?'selected':''}>Extra</option>
+      <select name="cat" style="border:none;background:transparent;font-family:inherit;font-size:.82rem;color:rgba(26,18,8,.6);outline:none;cursor:pointer;width:100%;">
+        <option value="Classiche"   ${item.cat==='Classiche'  ?'selected':''}>Classiche</option>
+        <option value="Speciali"    ${item.cat==='Speciali'   ?'selected':''}>Speciali</option>
+        <option value="Con Provola" ${item.cat==='Con Provola'?'selected':''}>Con Provola</option>
+        <option value="Formaggi"    ${item.cat==='Formaggi'   ?'selected':''}>Formaggi</option>
+        <option value="Con Speck"   ${item.cat==='Con Speck'  ?'selected':''}>Con Speck</option>
+        <option value="Premium"     ${item.cat==='Premium'    ?'selected':''}>Premium</option>
+        <option value="Ripiene"     ${item.cat==='Ripiene'    ?'selected':''}>Ripiene</option>
+        <option value="Piadepizze"  ${item.cat==='Piadepizze' ?'selected':''}>Piadepizze</option>
+        <option value="Saltimbocca" ${item.cat==='Saltimbocca'?'selected':''}>Saltimbocca</option>
+        <option value="extra"       ${item.cat==='extra'      ?'selected':''}>Extra</option>
+        <option value="pizza"       ${item.cat==='pizza'      ?'selected':''}>Pizza (generico)</option>
       </select>
     </td>
     <td><button class="btn-del-row" onclick="delRow(this)" title="Rimuovi">✕</button></td>
