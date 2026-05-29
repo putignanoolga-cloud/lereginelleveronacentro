@@ -937,15 +937,15 @@ function renderOrders() {
         '</div>' +
       '</div>' +
       '<div class="order-card-footer">' +
-        '<select class="order-status-sel" onchange="updateStatus('' + o.orderId + '',this.value)">' +
+        '<select class="order-status-sel" onchange="updateStatus(\'' + o.orderId + '\',this.value)">' +
           '<option value="nuovo"'      + (o.status==='nuovo'?'       selected':'') + '>🟢 Nuovo</option>' +
           '<option value="preparazione"'+ (o.status==='preparazione'?' selected':'') + '>🟡 In preparazione</option>' +
           '<option value="pronto"'    + (o.status==='pronto'?'      selected':'') + '>🔴 Pronto / In consegna</option>' +
           '<option value="consegnato"'+ (o.status==='consegnato'?'  selected':'') + '>✅ Consegnato</option>' +
         '</select>' +
         '<div style="display:flex;gap:.5rem;">' +
-          '<button class="btn-print-order" onclick="printOrder('' + o.orderId + '')">🖨️ Stampa</button>' +
-          '<button class="btn-del-order" onclick="deleteOrder('' + o.orderId + '')" title="Elimina">✕</button>' +
+          '<button class="btn-print-order" onclick="printOrder(\'' + o.orderId + '\')">🖨️ Stampa</button>' +
+          '<button class="btn-del-order" onclick="deleteOrder(\'' + o.orderId + '\')" title="Elimina">✕</button>' +
         '</div>' +
       '</div>' +
     '</div>';
