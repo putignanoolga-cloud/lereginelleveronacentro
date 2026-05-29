@@ -603,6 +603,7 @@ var RG_DEFAULT_MENU = [
   { id:18, emoji:'🥦', name:'Ortolana',                desc:'Pomodorini, mozzarella fiordilatte, melanzane, zucchine, peperoni e olio evo',           price:10.50, cat:'Speciali' },
   // CON PROVOLA
   { id:19, emoji:'🥓', name:'Cafuncella',              desc:'Provola affumicata, patate al forno, pancetta, grana e olio evo',                        price:10.50, cat:'Con Provola' },
+  { id:80, emoji:'🌿', name:'Crudo e Philadelphia',   desc:'Pomodoro, mozzarella fiordilatte, prosciutto crudo, philadelphia, rucola e olio evo',     price:11.50, cat:'Con Provola' },
   { id:20, emoji:'🌿', name:'Parmigiana',              desc:'Parmigiana di melanzane, provola affumicata e olio evo',                                 price:10.50, cat:'Con Provola' },
   { id:21, emoji:'🌿', name:'Salsiccia e Friarielli',  desc:'Provola affumicata, salsiccia, friarielli e olio evo',                                   price:11.50, cat:'Con Provola' },
   { id:22, emoji:'🫒', name:'Scarurella',              desc:'Provola affumicata, scarole, olive nere, capperi, scaglie di pecorino, pinoli e olio evo',price:10.00, cat:'Con Provola' },
@@ -645,6 +646,27 @@ var RG_DEFAULT_MENU = [
   { id:56, emoji:'🍄', name:'Salsiccia e Funghi',      desc:'Provola affumicata, fonduta di bufala, cipolla rossa, salsiccia, funghi misti e olio evo',price:13.00, cat:'Premium' },
   { id:57, emoji:'🐟', name:'Stracciatella e Salmone', desc:'Mozzarella fiordilatte, pomodorini, salmone, stracciatella, rucola, limone e olio evo',  price:13.50, cat:'Premium' },
   { id:58, emoji:'🐟', name:'Salmone e Philadelphia',  desc:'Mozzarella fiordilatte, pomodorini, salmone, philadelphia e olio evo',                   price:13.50, cat:'Premium' },
+  // RIPIENE
+  { id:62, emoji:'🫓', name:'Ripieno al Salame',                    desc:'Pomodoro, ricotta, mozzarella fiordilatte, salame dolce, pepe e olio evo',                   price:10.50, cat:'Ripiene' },
+  { id:63, emoji:'🫓', name:'Ripieno al Prosciutto',                desc:'Pomodoro, ricotta, mozzarella fiordilatte, prosciutto, pepe e olio evo',                     price:10.50, cat:'Ripiene' },
+  { id:64, emoji:'🫓', name:'Ripieno alle Scarole',                 desc:'Pomodoro, provola affumicata, scarole, olive nere, capperi, pecorino e olio evo',             price:10.50, cat:'Ripiene' },
+  { id:65, emoji:'🫓', name:'Ripieno con Salsiccia e Friarielli',   desc:'Pomodoro, salsiccia, friarielli e provola',                                                   price:11.50, cat:'Ripiene' },
+  // PIADEPIZZE
+  { id:66, emoji:'🥙', name:'Prosciutto Crudo di Parma e Bufala',   desc:'Prosciutto crudo di Parma, mozzarella di bufala campana, pomodoro cuor di bue e insalata',   price:13.50, cat:'Piadepizze' },
+  { id:67, emoji:'🥙', name:'Crudo e Stracciatella',                desc:'Prosciutto crudo di Parma, stracciatella di bufala, pomodorini datterini, rucola e petali di grana padano', price:13.50, cat:'Piadepizze' },
+  { id:68, emoji:'🥙', name:'Prosciutto Cotto e Bufala',            desc:'Prosciutto cotto, mozzarella di bufala, pomodorini datterini e insalata',                    price:12.50, cat:'Piadepizze' },
+  { id:69, emoji:'🥙', name:'Speck e Bufala',                       desc:'Speck, mozzarella di bufala, insalata e misto funghi',                                        price:13.50, cat:'Piadepizze' },
+  // SALTIMBOCCA
+  { id:70, emoji:'🥪', name:'Salsiccia, Friarielli e Provola',              desc:'',   price:11.00, cat:'Saltimbocca' },
+  { id:71, emoji:'🥪', name:'Mozzarella di Bufala e Prosciutto Crudo',      desc:'',   price:11.00, cat:'Saltimbocca' },
+  { id:72, emoji:'🥪', name:'Provola, Salsiccia e Peperoni',                desc:'',   price:11.00, cat:'Saltimbocca' },
+  { id:73, emoji:'🥪', name:'Provola, Porchetta e Funghi Misti',            desc:'',   price:11.00, cat:'Saltimbocca' },
+  { id:74, emoji:'🥪', name:'Provola, Pancetta e Funghi Misti',             desc:'',   price:11.00, cat:'Saltimbocca' },
+  { id:75, emoji:'🥪', name:'Mozzarella, Pancetta e Carciofini',            desc:'',   price:11.00, cat:'Saltimbocca' },
+  { id:76, emoji:'🥪', name:'Provola, Porchetta e Friarielli',              desc:'',   price:11.00, cat:'Saltimbocca' },
+  { id:77, emoji:'🥪', name:'Prosciutto Cotto, Mozzarella e Zucchine',      desc:'',   price:11.00, cat:'Saltimbocca' },
+  { id:78, emoji:'🥪', name:'Provola, Porchetta e Parmigiana',              desc:'',   price:11.00, cat:'Saltimbocca' },
+  { id:79, emoji:'🥪', name:'Zingariello',                                  desc:'Pomodorino, tonno, cipolla rossa, mozzarella di bufala e insalata', price:11.00, cat:'Saltimbocca' },
   // EXTRA
   { id:59, emoji:'💧', name:'Acqua naturale/frizzante', desc:'75cl',                                                                                   price:1.50,  cat:'extra' },
   { id:60, emoji:'🍺', name:'Birra artigianale',        desc:'Birra in bottiglia',                                                                     price:3.50,  cat:'extra' },
@@ -662,7 +684,6 @@ function rgGetDelivery() {
 }
 
 const menu = rgGetMenu();
-const deliverySettings = rgGetDelivery();
 const deliverySettings = rgGetDelivery();
 
 
@@ -741,9 +762,9 @@ function switchCat(btn) {
 
 function renderMenu() {
   var menuData = rgGetMenu();
-  var CAT_ORDER = ['Classiche','Speciali','Con Provola','Formaggi','Con Speck','Premium','pizza','extra'];
-  var CAT_ICONS = {'Classiche':'🍕','Speciali':'⭐','Con Provola':'🫒','Formaggi':'🧀','Con Speck':'🍖','Premium':'👑','pizza':'🍕','extra':'🥤'};
-  var CAT_LABELS = {'Classiche':'Classiche','Speciali':'Speciali','Con Provola':'Provola','Formaggi':'Formaggi','Con Speck':'Speck','Premium':'Premium','pizza':'Pizze','extra':'Extra'};
+  var CAT_ORDER = ['Classiche','Speciali','Con Provola','Formaggi','Con Speck','Premium','Ripiene','Piadepizze','Saltimbocca','pizza','extra'];
+  var CAT_ICONS = {'Classiche':'🍕','Speciali':'⭐','Con Provola':'🫒','Formaggi':'🧀','Con Speck':'🍖','Premium':'👑','Ripiene':'🫓','Piadepizze':'🥙','Saltimbocca':'🥪','pizza':'🍕','extra':'🥤'};
+  var CAT_LABELS = {'Classiche':'Classiche','Speciali':'Speciali','Con Provola':'Provola','Formaggi':'Formaggi','Con Speck':'Speck','Premium':'Premium','Ripiene':'Ripiene','Piadepizze':'Piadepizze','Saltimbocca':'Saltimbocca','pizza':'Pizze','extra':'Extra'};
 
   var cats = {}, catList = [];
   menuData.forEach(function(p) {
@@ -841,17 +862,15 @@ function proceedToPayment() {
   if(!ds2.alwaysFree && ds2.freeThreshold > 0 && subtotal >= ds2.freeThreshold) delivery = 0;
 
   const orderData = {
+    tipo:     'asporto',
     nome:     document.getElementById('nome').value.trim(),
     cognome:  document.getElementById('cognome').value.trim(),
-    via:      document.getElementById('via').value.trim(),
-    civico:   document.getElementById('civico').value.trim(),
-    piano:    document.getElementById('piano').value.trim(),
     telefono: document.getElementById('telefono').value.trim(),
     email:    document.getElementById('email').value.trim(),
     note:     document.getElementById('note').value.trim(),
     orario:   selectedTime,
-    items, subtotal, delivery,
-    total: subtotal + delivery,
+    items, subtotal, delivery: 0,
+    total: subtotal,
   };
 
   localStorage.setItem('reginelleOrder', JSON.stringify(orderData));
