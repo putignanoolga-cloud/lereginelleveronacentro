@@ -65,12 +65,9 @@
 
   /* ── LAYOUT ── */
   .order-page{
-    max-width:1100px;margin:0 auto;
-    padding:2.5rem 1.5rem 4rem;
-    display:grid;
-    grid-template-columns:1fr 340px;
-    gap:1.5rem;
-    align-items:start;
+    max-width:760px;margin:0 auto;
+    padding:2rem 1.5rem 4rem;
+    display:flex;flex-direction:column;gap:1.5rem;
   }
 
   /* ── HERO BADGE (tipo ordine) ── */
@@ -193,7 +190,6 @@
   /* ── SUMMARY ── */
   .summary-card{
     background:var(--bordeaux-deep);border-radius:6px;padding:1.8rem;
-    position:sticky;top:80px;
   }
   .summary-title{
     font-family:'Playfair Display',serif;font-size:1.3rem;font-style:italic;font-weight:700;
@@ -268,10 +264,6 @@
     border-top:1px solid var(--border);padding-top:1rem;
   }
 
-  @media(max-width:960px){
-    .order-page{grid-template-columns:1fr;}
-    .summary-card{position:static;}
-  }
   @media(max-width:600px){
     .form-row{grid-template-columns:1fr;}
     header{padding:0 1rem;}
