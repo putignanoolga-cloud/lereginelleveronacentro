@@ -1,0 +1,1357 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Admin – Le Reginelle</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bordeaux:#7B1D2E;--bordeaux-dark:#4A0E1A;--bordeaux-deep:#2E0810;
+  --olive:#5C6B3A;--olive-light:#7A8B52;
+  --cream:#F4EFE3;--cream-dark:#E8DFC8;--gold:#C8A96E;
+  --noir:#1A1208;--white:#FDFAF4;
+  --border:rgba(200,169,110,0.18);--error:#c0392b;--success:#27ae60;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html {}
+body {background:var(--cream);color:var(--noir);font-family:'Cormorant Garamond',serif;min-height:100vh;}
+
+/* ── LOGIN SCREEN ── */
+.login-screen{
+  display:flex;align-items:center;justify-content:center;
+  min-height:100vh;
+  background:linear-gradient(135deg,var(--bordeaux-deep),#0e0407);
+  padding:2rem;
+}
+.login-box{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(200,169,110,.2);
+  border-radius:10px;
+  padding:3rem 2.5rem;
+  text-align:center;
+  width:100%;max-width:360px;
+}
+.login-crest{
+  width:64px;height:64px;
+  background:transparent;border:2px solid var(--gold);
+  border-radius:50%;margin:0 auto 1.5rem;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--gold);font-style:italic;
+}
+.login-title{
+  font-family:'Playfair Display',serif;font-size:1.6rem;font-style:italic;font-weight:700;
+  color:var(--cream);margin-bottom:.3rem;
+}
+.login-sub{font-size:.8rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(244,239,227,.4);margin-bottom:2rem;}
+
+/* PIN dots */
+.pin-display{
+  display:flex;justify-content:center;gap:.8rem;margin-bottom:1.5rem;
+}
+.pin-dot{
+  width:14px;height:14px;border-radius:50%;
+  border:2px solid rgba(200,169,110,.4);
+  background:transparent;transition:all .2s;
+}
+.pin-dot.filled{background:var(--gold);border-color:var(--gold);}
+.pin-dot.error {background:var(--error);border-color:var(--error);}
+
+/* Numpad */
+.numpad{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:.6rem;max-width:240px;margin:0 auto;
+}
+.num-btn{
+  padding:1rem;border-radius:6px;border:none;
+  background:rgba(255,255,255,.06);color:var(--cream);
+  font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;
+  cursor:pointer;transition:background .18s;
+  -webkit-tap-highlight-color:transparent;
+}
+.num-btn:hover,.num-btn:active{background:rgba(200,169,110,.2);}
+.num-btn.del{font-size:1rem;color:rgba(244,239,227,.5);}
+.num-btn.zero{grid-column:2;}
+.pin-error-msg{
+  color:var(--error);font-size:.85rem;font-style:italic;
+  margin-top:.8rem;min-height:1.2em;
+}
+
+/* ── ADMIN PANEL ── */
+.admin-screen{display:none;min-height:100vh;background:var(--cream);}
+
+/* Header */
+.admin-header{
+  position:sticky;top:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 2rem;height:60px;
+  background:var(--bordeaux-deep);
+  border-bottom:1px solid rgba(200,169,110,.2);
+}
+.admin-logo{
+  font-family:'Playfair Display',serif;
+  font-size:1rem;font-style:italic;font-weight:700;color:var(--cream);
+  display:flex;align-items:center;gap:.5rem;
+}
+.admin-logo-badge{
+  font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;
+  background:var(--olive);color:#fff;padding:.2rem .5rem;border-radius:2px;
+}
+.btn-logout{
+  font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;
+  color:rgba(244,239,227,.5);background:none;border:none;cursor:pointer;
+  font-family:'Cormorant Garamond',serif;
+  display:flex;align-items:center;gap:.4rem;transition:color .2s;
+}
+.btn-logout:hover{color:var(--gold);}
+
+/* Tabs */
+.admin-tabs{
+  display:flex;gap:0;
+  border-bottom:2px solid var(--border);
+  background:var(--white);
+  padding:0 2rem;
+}
+.tab-btn{
+  padding:.9rem 1.5rem;
+  font-family:'Cormorant Garamond',serif;
+  font-size:.8rem;letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(26,18,8,.45);
+  background:none;border:none;cursor:pointer;
+  border-bottom:2px solid transparent;margin-bottom:-2px;
+  transition:all .2s;
+}
+.tab-btn.active{color:var(--bordeaux);border-bottom-color:var(--bordeaux);font-weight:700;}
+.tab-btn:hover{color:var(--bordeaux);}
+
+/* Content */
+.admin-content{max-width:900px;margin:0 auto;padding:2rem 1.5rem 4rem;}
+
+/* Section */
+.admin-section{display:none;}
+.admin-section.active{display:block;}
+
+.section-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;
+}
+.section-title{
+  font-family:'Playfair Display',serif;
+  font-size:1.5rem;font-style:italic;font-weight:700;color:var(--bordeaux-dark);
+}
+
+/* Save button */
+.btn-save{
+  padding:.75rem 2rem;
+  background:var(--olive);border:1.5px solid var(--olive-light);
+  color:#fff;font-family:'Cormorant Garamond',serif;
+  font-size:.82rem;letter-spacing:.2em;text-transform:uppercase;font-weight:700;
+  border-radius:4px;cursor:pointer;transition:all .22s;
+  display:flex;align-items:center;gap:.5rem;
+}
+.btn-save:hover{background:var(--olive-light);}
+.btn-save svg{width:15px;height:15px;}
+
+/* ── DELIVERY COST CARD ── */
+.delivery-card{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:6px;padding:1.5rem;margin-bottom:1.5rem;
+}
+.delivery-card-title{
+  font-family:'Playfair Display',serif;
+  font-size:1.1rem;font-style:italic;font-weight:700;
+  color:var(--bordeaux-dark);margin-bottom:.3rem;
+}
+.delivery-card-desc{font-size:.88rem;color:rgba(26,18,8,.5);margin-bottom:1rem;}
+.delivery-input-row{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
+.euro-wrap{position:relative;display:inline-flex;align-items:center;}
+.euro-sym{
+  position:absolute;left:.85rem;
+  font-family:'Playfair Display',serif;font-size:1.1rem;
+  color:var(--bordeaux);pointer-events:none;
+}
+input.price-input{
+  padding:.7rem .9rem .7rem 2.2rem;
+  border:1.5px solid var(--border);border-radius:4px;
+  font-family:'Playfair Display',serif;font-size:1.2rem;
+  color:var(--noir);background:var(--cream);
+  width:130px;outline:none;
+  transition:border-color .2s,box-shadow .2s;
+}
+input.price-input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(200,169,110,.1);}
+.free-toggle{
+  display:flex;align-items:center;gap:.5rem;
+  font-size:.9rem;color:rgba(26,18,8,.6);cursor:pointer;user-select:none;
+}
+.free-toggle input{width:16px;height:16px;cursor:pointer;}
+.threshold-row{
+  margin-top:.8rem;
+  display:flex;align-items:center;gap:.8rem;
+  font-size:.9rem;color:rgba(26,18,8,.6);flex-wrap:wrap;
+}
+
+/* ── MENU TABLE ── */
+.menu-table{width:100%;border-collapse:collapse;}
+.menu-table thead th{
+  font-size:.68rem;letter-spacing:.25em;text-transform:uppercase;
+  color:var(--olive);font-weight:600;
+  padding:.6rem .8rem;border-bottom:2px solid var(--border);
+  text-align:left;background:var(--white);
+}
+.menu-table tbody tr{background:var(--white);}
+.menu-table tbody tr:nth-child(even){background:var(--cream);}
+.menu-table tbody tr:hover{background:rgba(200,169,110,.06);}
+.menu-table td{
+  padding:.55rem .8rem;
+  border-bottom:1px solid var(--border);
+  vertical-align:middle;
+}
+
+
+
+/* ── ORDERS SECTION ── */
+.orders-toolbar{
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem;
+}
+.orders-filters{display:flex;gap:.5rem;flex-wrap:wrap;}
+.filter-btn{
+  padding:.4rem .9rem;border-radius:4px;
+  font-family:'Cormorant Garamond',serif;
+  font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;
+  border:1.5px solid var(--border);background:var(--white);
+  color:rgba(26,18,8,.5);cursor:pointer;transition:all .2s;
+}
+.filter-btn.active,.filter-btn:hover{background:var(--bordeaux);border-color:var(--bordeaux);color:#fff;}
+.orders-count{
+  font-size:.82rem;color:rgba(26,18,8,.4);font-style:italic;
+}
+
+.orders-list{display:flex;flex-direction:column;gap:1rem;}
+
+.order-card{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:6px;overflow:hidden;
+  transition:box-shadow .2s;
+}
+.order-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.06);}
+.order-card.status-nuovo{border-left:4px solid var(--olive);}
+.order-card.status-preparazione{border-left:4px solid var(--gold);}
+.order-card.status-pronto{border-left:4px solid var(--bordeaux);}
+.order-card.status-consegnato{border-left:4px solid rgba(26,18,8,.2);}
+
+.order-card-header{
+  display:flex;align-items:center;flex-wrap:wrap;
+  gap:.5rem 1rem;
+  padding:.9rem 1.2rem;
+  background:var(--cream);
+  border-bottom:1px solid var(--border);
+}
+.order-id{
+  font-family:'Playfair Display',serif;
+  font-size:1rem;font-weight:700;font-style:italic;
+  color:var(--bordeaux-dark);
+}
+.order-type-badge{
+  font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;
+  padding:.25rem .6rem;border-radius:3px;font-weight:700;
+}
+.badge-domicilio{background:var(--bordeaux);color:var(--cream);}
+.badge-asporto{background:var(--olive);color:#fff;}
+.order-time{
+  font-family:'Playfair Display',serif;
+  font-size:1rem;font-style:italic;color:var(--noir);
+}
+.order-ts{font-size:.72rem;color:rgba(26,18,8,.35);margin-left:auto;}
+
+.order-card-body{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:0;
+}
+.order-col{padding:1rem 1.2rem;}
+.order-col:first-child{border-right:1px solid var(--border);}
+.order-col-label{
+  font-size:.65rem;letter-spacing:.25em;text-transform:uppercase;
+  color:var(--olive);margin-bottom:.4rem;font-weight:600;
+}
+.order-name{
+  font-family:'Playfair Display',serif;
+  font-size:1.1rem;font-style:italic;font-weight:700;
+  color:var(--bordeaux-dark);margin-bottom:.2rem;
+}
+.order-info{font-size:.9rem;color:rgba(26,18,8,.65);line-height:1.5;}
+.order-items{
+  font-size:.88rem;color:rgba(26,18,8,.7);line-height:1.6;
+}
+.order-total{
+  font-family:'Playfair Display',serif;
+  font-size:1rem;font-weight:700;color:var(--bordeaux);
+  margin-top:.3rem;
+}
+
+.order-card-footer{
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:.5rem;
+  padding:.7rem 1.2rem;
+  border-top:1px solid var(--border);
+  background:rgba(244,239,227,.5);
+}
+.order-status-sel{
+  padding:.3rem .6rem;border:1.5px solid var(--border);border-radius:4px;
+  font-family:'Cormorant Garamond',serif;font-size:.82rem;
+  color:var(--noir);background:var(--white);cursor:pointer;outline:none;
+}
+.btn-print-order{
+  padding:.45rem 1.1rem;
+  background:var(--bordeaux-deep);border:1.5px solid var(--gold);
+  color:var(--gold);border-radius:4px;
+  font-family:'Cormorant Garamond',serif;
+  font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;font-weight:700;
+  cursor:pointer;transition:all .2s;
+  display:flex;align-items:center;gap:.4rem;
+}
+.btn-print-order:hover{background:var(--gold);color:var(--bordeaux-deep);}
+.btn-del-order{
+  padding:.4rem .6rem;background:none;
+  border:1px solid rgba(192,57,43,.3);color:var(--error);
+  border-radius:4px;cursor:pointer;font-size:.8rem;transition:all .2s;
+}
+.btn-del-order:hover{background:rgba(192,57,43,.08);}
+
+.orders-empty{
+  text-align:center;padding:3rem 1rem;
+  color:rgba(26,18,8,.35);font-size:1rem;font-style:italic;
+}
+.orders-empty-icon{font-size:3rem;display:block;margin-bottom:.8rem;opacity:.4;}
+
+/* ── PRINT SLIP ── */
+@media print {
+  body > *:not(#printSlip){ display:none !important; }
+  #printSlip{ display:block !important; }
+}
+#printSlip{display:none;}
+.slip{
+  width:80mm;margin:0 auto;
+  font-family:'Courier New',monospace;font-size:11px;
+  color:#000;background:#fff;padding:8mm;
+}
+.slip-hr{border:none;border-top:1px dashed #000;margin:4mm 0;}
+.slip-title{font-size:16px;font-weight:700;text-align:center;margin-bottom:2mm;}
+.slip-center{text-align:center;}
+.slip-row{display:flex;justify-content:space-between;margin:1mm 0;}
+.slip-big{font-size:14px;font-weight:700;}
+
+/* ── MEDIA SECTION ── */
+.media-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:1.5rem;margin-top:0;
+}
+.media-card{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:8px;overflow:hidden;
+}
+.media-card-header{
+  padding:1rem 1.2rem .6rem;
+  border-bottom:1px solid var(--border);
+}
+.media-card-title{
+  font-family:'Playfair Display',serif;
+  font-size:1rem;font-style:italic;font-weight:700;color:var(--bordeaux-dark);
+}
+.media-card-desc{font-size:.8rem;color:rgba(26,18,8,.45);margin-top:.2rem;}
+.media-card-body{padding:1.2rem;}
+
+.media-preview{
+  width:100%;height:140px;
+  border-radius:6px;border:2px dashed var(--border);
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:.5rem;
+  margin-bottom:.8rem;
+  background:var(--cream);position:relative;overflow:hidden;
+  cursor:pointer;transition:border-color .2s;
+}
+.media-preview:hover{border-color:var(--gold);}
+.media-preview img, .media-preview video{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;border-radius:4px;
+}
+.media-preview-icon{font-size:2rem;opacity:.4;}
+.media-preview-label{font-size:.75rem;color:rgba(26,18,8,.4);font-style:italic;}
+
+.media-input{display:none;}
+
+.media-actions{display:flex;gap:.5rem;flex-wrap:wrap;}
+.btn-upload{
+  flex:1;padding:.6rem .8rem;
+  background:var(--bordeaux);border:1px solid var(--gold);
+  color:var(--cream);border-radius:4px;
+  font-family:'Cormorant Garamond',serif;
+  font-size:.78rem;letter-spacing:.15em;text-transform:uppercase;
+  cursor:pointer;transition:all .2s;text-align:center;
+  -webkit-tap-highlight-color:transparent;
+}
+.btn-upload:hover{background:var(--gold);color:var(--bordeaux-deep);}
+.btn-remove{
+  padding:.6rem .8rem;
+  background:transparent;border:1px solid rgba(192,57,43,.4);
+  color:var(--error);border-radius:4px;
+  font-family:'Cormorant Garamond',serif;
+  font-size:.78rem;cursor:pointer;transition:all .2s;
+  -webkit-tap-highlight-color:transparent;
+}
+.btn-remove:hover{background:rgba(192,57,43,.08);}
+
+.media-url-row{
+  display:flex;gap:.4rem;margin-top:.6rem;
+}
+.media-url-input{
+  flex:1;padding:.55rem .8rem;
+  border:1.5px solid var(--border);border-radius:4px;
+  font-family:'Cormorant Garamond',serif;font-size:.85rem;
+  color:var(--noir);background:var(--cream);outline:none;
+}
+.media-url-input:focus{border-color:var(--gold);}
+.btn-url-apply{
+  padding:.55rem .9rem;
+  background:var(--olive);border:none;color:#fff;
+  border-radius:4px;font-family:'Cormorant Garamond',serif;
+  font-size:.78rem;cursor:pointer;white-space:nowrap;
+  transition:background .2s;
+}
+.btn-url-apply:hover{background:var(--olive-light);}
+
+.storage-bar{
+  background:var(--cream);border:1px solid var(--border);
+  border-radius:4px;padding:.6rem .8rem;margin-bottom:1rem;
+  font-size:.8rem;color:rgba(26,18,8,.55);
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.3rem;
+}
+.storage-warning{color:var(--error);font-weight:600;}
+
+/* ── EMOJI PICKER ── */
+.td-emoji {
+  font-size:1.4rem;width:52px;text-align:center;
+  position:relative;
+}
+.emoji-btn {
+  background:none;border:1.5px solid transparent;border-radius:4px;
+  cursor:pointer;font-size:1.4rem;padding:.15rem .25rem;
+  transition:border-color .18s;line-height:1;
+  -webkit-tap-highlight-color:transparent;
+}
+.emoji-btn:hover { border-color:var(--gold); }
+
+.emoji-picker {
+  display:none;
+  position:absolute;top:110%;left:50%;transform:translateX(-50%);
+  background:var(--white);border:1px solid var(--border);
+  border-radius:8px;box-shadow:0 8px 32px rgba(0,0,0,.12);
+  padding:.6rem;z-index:500;
+  width:220px;
+}
+.emoji-picker.open { display:block; }
+.emoji-picker-grid {
+  display:flex;flex-wrap:wrap;gap:.2rem;
+}
+.emoji-picker-label {
+  font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(26,18,8,.35);width:100%;padding:.3rem 0 .1rem;
+  margin-top:.2rem;
+}
+.emoji-opt {
+  font-size:1.3rem;padding:.25rem;border-radius:4px;cursor:pointer;
+  transition:background .15s;line-height:1;
+  -webkit-tap-highlight-color:transparent;border:none;background:none;
+}
+.emoji-opt:hover { background:var(--cream-dark); }
+
+
+input.cell-input{
+  width:100%;padding:.45rem .6rem;
+  border:1.5px solid transparent;border-radius:3px;
+  font-family:'Cormorant Garamond',serif;font-size:.98rem;
+  color:var(--noir);background:transparent;
+  outline:none;transition:all .18s;
+}
+input.cell-input:hover{border-color:rgba(200,169,110,.3);background:var(--cream);}
+input.cell-input:focus{border-color:var(--gold);background:var(--white);box-shadow:0 0 0 2px rgba(200,169,110,.1);}
+input.cell-price{
+  width:80px;font-weight:700;color:var(--bordeaux);
+  font-family:'Playfair Display',serif;
+}
+
+.td-category{
+  font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;
+  color:rgba(26,18,8,.35);width:80px;
+}
+
+/* Add / remove row */
+.btn-add-row{
+  margin-top:1rem;padding:.65rem 1.4rem;
+  background:transparent;border:1.5px dashed rgba(200,169,110,.4);
+  color:rgba(26,18,8,.5);border-radius:4px;
+  font-family:'Cormorant Garamond',serif;font-size:.85rem;
+  cursor:pointer;transition:all .2s;width:100%;
+}
+.btn-add-row:hover{border-color:var(--gold);color:var(--bordeaux);}
+.btn-del-row{
+  background:none;border:none;cursor:pointer;
+  color:rgba(200,0,0,.3);font-size:1.1rem;padding:.2rem .4rem;
+  border-radius:3px;transition:color .18s;
+}
+.btn-del-row:hover{color:var(--error);}
+
+/* Toast */
+.toast{
+  position:fixed;bottom:2rem;left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:var(--olive);color:#fff;
+  padding:.8rem 1.8rem;border-radius:5px;
+  font-family:'Cormorant Garamond',serif;font-size:1rem;
+  box-shadow:0 8px 28px rgba(0,0,0,.15);z-index:999;
+  transition:transform .35s cubic-bezier(.34,1.56,.64,1);
+  white-space:nowrap;max-width:90vw;text-align:center;
+}
+.toast.on{transform:translateX(-50%) translateY(0);}
+.toast.err{background:var(--error);}
+
+@media(max-width:600px){
+  .admin-header{padding:0 1rem;}
+  .admin-content{padding:1.2rem .8rem 3rem;}
+  .admin-tabs{padding:0 .5rem;}
+  .tab-btn{padding:.8rem .9rem;font-size:.72rem;}
+  .section-header{flex-direction:column;align-items:flex-start;}
+  .menu-table thead th:nth-child(4){display:none;}
+  .menu-table td:nth-child(4){display:none;}
+  .td-category{display:none;}
+  .btn-save{width:100%;justify-content:center;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════ LOGIN ══════════════════════ -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <div class="login-crest">R</div>
+    <div class="login-title">Area Admin</div>
+    <div class="login-sub">Le Reginelle · Verona</div>
+
+    <div class="pin-display">
+      <div class="pin-dot" id="d0"></div>
+      <div class="pin-dot" id="d1"></div>
+      <div class="pin-dot" id="d2"></div>
+      <div class="pin-dot" id="d3"></div>
+    </div>
+
+    <div class="numpad">
+      <button class="num-btn" onclick="pinPress('1')">1</button>
+      <button class="num-btn" onclick="pinPress('2')">2</button>
+      <button class="num-btn" onclick="pinPress('3')">3</button>
+      <button class="num-btn" onclick="pinPress('4')">4</button>
+      <button class="num-btn" onclick="pinPress('5')">5</button>
+      <button class="num-btn" onclick="pinPress('6')">6</button>
+      <button class="num-btn" onclick="pinPress('7')">7</button>
+      <button class="num-btn" onclick="pinPress('8')">8</button>
+      <button class="num-btn" onclick="pinPress('9')">9</button>
+      <button class="num-btn del" onclick="pinDel()">⌫</button>
+      <button class="num-btn zero" onclick="pinPress('0')">0</button>
+    </div>
+
+    <div class="pin-error-msg" id="pinError"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════ ADMIN PANEL ══════════════════════ -->
+<div class="admin-screen" id="adminScreen">
+
+  <div class="admin-header">
+    <div class="admin-logo">
+      Le Reginelle
+      <span class="admin-logo-badge">Admin</span>
+    </div>
+    <button class="btn-logout" onclick="logout()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Esci
+    </button>
+  </div>
+
+  <!-- Tabs -->
+  <div class="admin-tabs">
+    <button class="tab-btn active" onclick="showTab('menu')">🍕 Menu pizze</button>
+    <button class="tab-btn" onclick="showTab('consegna')">🛵 Consegna</button>
+    <button class="tab-btn" onclick="showTab('media')">🖼️ Media & Foto</button>
+    <button class="tab-btn" onclick="showTab('ordini')">📋 Ordini</button>
+  </div>
+
+  <div class="admin-content">
+
+    <!-- ── SECTION: MENU ── -->
+    <div class="admin-section active" id="sec-menu">
+      <div class="section-header">
+        <div class="section-title">Menu pizze & extra</div>
+        <button class="btn-save" onclick="saveMenu()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          Salva e aggiorna
+        </button>
+      </div>
+
+      <table class="menu-table" id="menuTable">
+        <thead>
+          <tr>
+            <th style="width:44px"></th>
+            <th>Nome</th>
+            <th>Ingredienti</th>
+            <th style="width:90px">Prezzo</th>
+            <th class="td-category">Categoria</th>
+            <th style="width:36px"></th>
+          </tr>
+        </thead>
+        <tbody id="menuBody"></tbody>
+      </table>
+      <button class="btn-add-row" onclick="addRow()">+ Aggiungi voce al menu</button>
+    </div>
+
+    <!-- ── SECTION: CONSEGNA ── -->
+    <div class="admin-section" id="sec-consegna">
+      <div class="section-header">
+        <div class="section-title">Impostazioni consegna</div>
+        <button class="btn-save" onclick="saveDelivery()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          Salva e aggiorna
+        </button>
+      </div>
+
+      <div class="delivery-card">
+        <div class="delivery-card-title">Costo di consegna a domicilio</div>
+        <div class="delivery-card-desc">Questo importo viene mostrato nella pagina ordine e nel riepilogo pagamento.</div>
+        <div class="delivery-input-row">
+          <div class="euro-wrap">
+            <span class="euro-sym">€</span>
+            <input class="price-input" type="number" id="deliveryCost" min="0" step="0.5" value="2.00">
+          </div>
+          <label class="free-toggle">
+            <input type="checkbox" id="deliveryFreeToggle" onchange="toggleFree()">
+            Consegna sempre gratuita
+          </label>
+        </div>
+        <div class="threshold-row">
+          Gratuita sopra:
+          <div class="euro-wrap">
+            <span class="euro-sym">€</span>
+            <input class="price-input" type="number" id="freeThreshold" min="0" step="1" value="20" style="width:110px;">
+          </div>
+          (metti 0 per disabilitare la soglia)
+        </div>
+      </div>
+
+      <div class="delivery-card">
+        <div class="delivery-card-title">Zona di consegna</div>
+        <div class="delivery-card-desc">Testo mostrato nella pagina ordine sotto il form indirizzo.</div>
+        <input type="text" id="deliveryZone" class="cell-input" style="border:1.5px solid var(--border);border-radius:4px;padding:.7rem .9rem;width:100%;font-size:1rem;background:var(--cream);" value="Consegniamo in tutta Verona e dintorni. Chiama al 045 565242 per info sulla zona. Tempo medio: 30–45 minuti.">
+      </div>
+
+    </div>
+
+
+    <!-- ── SECTION: MEDIA & FOTO ── -->
+    <div class="admin-section" id="sec-media">
+      <div class="section-header">
+        <div class="section-title">Media & Foto</div>
+        <div style="font-size:.85rem;color:rgba(26,18,8,.45);font-style:italic;">Le immagini vengono salvate nel browser. Max ~2MB per foto.</div>
+      </div>
+
+      <div class="storage-bar" id="storageBar">
+        <span>📦 Spazio usato: <strong id="storageUsed">—</strong></span>
+        <span id="storageWarn"></span>
+      </div>
+
+      <div class="media-grid">
+
+        <!-- LOGO -->
+        <div class="media-card">
+          <div class="media-card-header">
+            <div class="media-card-title">Logo pizzeria</div>
+            <div class="media-card-desc">Sostituisce la "R" nell'header e nel footer di tutte le pagine.</div>
+          </div>
+          <div class="media-card-body">
+            <div class="media-preview" id="prev-logo" onclick="document.getElementById('inp-logo').click()">
+              <span class="media-preview-icon">🏷️</span>
+              <span class="media-preview-label">Clicca per caricare (PNG/SVG consigliato)</span>
+            </div>
+            <input type="file" class="media-input" id="inp-logo" accept="image/*" onchange="uploadMedia('logo',this)">
+            <div class="media-actions">
+              <label for="inp-logo" class="btn-upload">📤 Carica logo</label>
+              <button class="btn-remove" onclick="removeMedia('logo')">✕</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- HERO foto/video URL -->
+        <div class="media-card">
+          <div class="media-card-header">
+            <div class="media-card-title">Hero — video / foto</div>
+            <div class="media-card-desc">Incolla un link YouTube oppure carica una foto di sfondo.</div>
+          </div>
+          <div class="media-card-body">
+            <div class="media-preview" id="prev-hero" onclick="document.getElementById('inp-hero').click()">
+              <span class="media-preview-icon">🎬</span>
+              <span class="media-preview-label">Foto di sfondo oppure usa URL sotto</span>
+            </div>
+            <input type="file" class="media-input" id="inp-hero" accept="image/*" onchange="uploadMedia('hero',this)">
+            <div class="media-actions">
+              <label for="inp-hero" class="btn-upload">📤 Carica foto sfondo</label>
+              <button class="btn-remove" onclick="removeMedia('hero')">✕</button>
+            </div>
+            <div class="media-url-row">
+              <input type="text" class="media-url-input" id="heroYtUrl" placeholder="URL YouTube es. https://youtu.be/xxxxx">
+              <button class="btn-url-apply" onclick="saveHeroUrl()">Applica</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STORIA foto 1 -->
+        <div class="media-card">
+          <div class="media-card-header">
+            <div class="media-card-title">Storia — foto grande</div>
+            <div class="media-card-desc">Foto principale nella sezione "La nostra storia" (riquadro grande).</div>
+          </div>
+          <div class="media-card-body">
+            <div class="media-preview" id="prev-story1" onclick="document.getElementById('inp-story1').click()">
+              <span class="media-preview-icon">🍕</span>
+              <span class="media-preview-label">Clicca per caricare</span>
+            </div>
+            <input type="file" class="media-input" id="inp-story1" accept="image/*" onchange="uploadMedia('story1',this)">
+            <div class="media-actions">
+              <label for="inp-story1" class="btn-upload">📤 Carica foto</label>
+              <button class="btn-remove" onclick="removeMedia('story1')">✕</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STORIA foto 2 -->
+        <div class="media-card">
+          <div class="media-card-header">
+            <div class="media-card-title">Storia — foto piccola</div>
+            <div class="media-card-desc">Foto sovrapposta nella sezione "La nostra storia" (riquadro piccolo).</div>
+          </div>
+          <div class="media-card-body">
+            <div class="media-preview" id="prev-story2" onclick="document.getElementById('inp-story2').click()">
+              <span class="media-preview-icon">🇮🇹</span>
+              <span class="media-preview-label">Clicca per caricare</span>
+            </div>
+            <input type="file" class="media-input" id="inp-story2" accept="image/*" onchange="uploadMedia('story2',this)">
+            <div class="media-actions">
+              <label for="inp-story2" class="btn-upload">📤 Carica foto</label>
+              <button class="btn-remove" onclick="removeMedia('story2')">✕</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <!-- ── SECTION: ORDINI ── -->
+    <div class="admin-section" id="sec-ordini">
+      <div class="orders-toolbar">
+        <div class="section-title">Ordini ricevuti</div>
+        <div style="display:flex;gap:.8rem;flex-wrap:wrap;align-items:center;">
+          <div class="orders-filters">
+            <button class="filter-btn active" onclick="filterOrders('tutti',this)">Tutti</button>
+            <button class="filter-btn" onclick="filterOrders('domicilio',this)">🛵 Domicilio</button>
+            <button class="filter-btn" onclick="filterOrders('asporto',this)">🛍️ Asporto</button>
+            <button class="filter-btn" onclick="filterOrders('nuovo',this)">Nuovi</button>
+          </div>
+          <button class="btn-save" onclick="clearOldOrders()" style="background:transparent;border-color:rgba(192,57,43,.4);color:var(--error);font-size:.72rem;">
+            🗑️ Svuota vecchi
+          </button>
+        </div>
+      </div>
+      <div class="orders-count" id="ordersCount"></div>
+      <div class="orders-list" id="ordersList"></div>
+    </div>
+
+    <!-- Print slip (hidden, shown only on print) -->
+    <div id="printSlip">
+      <div class="slip" id="slipContent"></div>
+    </div>
+
+  </div><!-- admin-content -->
+</div><!-- admin-screen -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+
+// ─── MEDIA MANAGEMENT ────────────────────────────────────
+const MEDIA_KEYS = { logo:'rg_logo', hero:'rg_hero', story1:'rg_story1', story2:'rg_story2', heroUrl:'rg_hero_url' };
+
+function loadMedia() {
+  Object.entries(MEDIA_KEYS).forEach(([name, key]) => {
+    if(name === 'heroUrl') {
+      const url = localStorage.getItem(key);
+      if(url) document.getElementById('heroYtUrl').value = url;
+      return;
+    }
+    const data = localStorage.getItem(key);
+    if(data) updatePreview(name, data);
+  });
+  updateStorageBar();
+}
+
+function uploadMedia(name, input) {
+  const file = input.files[0];
+  if(!file) return;
+  if(file.size > 2.5 * 1024 * 1024) {
+    showToast('File troppo grande. Max 2,5 MB.', true); return;
+  }
+  const reader = new FileReader();
+  reader.onload = e => {
+    const data = e.target.result;
+    try {
+      localStorage.setItem(MEDIA_KEYS[name], data);
+      updatePreview(name, data);
+      updateStorageBar();
+      showToast('✓ Immagine salvata — aggiorna la homepage per vederla');
+    } catch(err) {
+      showToast('Spazio esaurito. Rimuovi altre immagini prima.', true);
+    }
+  };
+  reader.readAsDataURL(file);
+  input.value = '';
+}
+
+function removeMedia(name) {
+  localStorage.removeItem(MEDIA_KEYS[name]);
+  const prev = document.getElementById('prev-' + name);
+  if(prev) {
+    prev.querySelectorAll('img,video').forEach(el => el.remove());
+    prev.style.background = '';
+  }
+  updateStorageBar();
+  showToast('Immagine rimossa');
+}
+
+function updatePreview(name, data) {
+  const prev = document.getElementById('prev-' + name);
+  if(!prev) return;
+  prev.querySelectorAll('img,video').forEach(el => el.remove());
+  if(data.startsWith('data:video')) {
+    const v = document.createElement('video');
+    v.src = data; v.muted = true; v.loop = true; v.autoplay = true;
+    prev.appendChild(v);
+  } else {
+    const img = document.createElement('img');
+    img.src = data;
+    prev.appendChild(img);
+  }
+}
+
+function saveHeroUrl() {
+  const url = document.getElementById('heroYtUrl').value.trim();
+  if(!url) { localStorage.removeItem(MEDIA_KEYS.heroUrl); showToast('URL rimosso'); return; }
+  localStorage.setItem(MEDIA_KEYS.heroUrl, url);
+  showToast('✓ URL hero salvato — ricarica la homepage');
+}
+
+function updateStorageBar() {
+  let total = 0;
+  Object.values(MEDIA_KEYS).forEach(key => {
+    const v = localStorage.getItem(key);
+    if(v) total += v.length;
+  });
+  const kb = (total / 1024).toFixed(0);
+  const mb = (total / 1024 / 1024).toFixed(2);
+  const el = document.getElementById('storageUsed');
+  const warn = document.getElementById('storageWarn');
+  if(el) el.textContent = kb > 1024 ? mb + ' MB' : kb + ' KB';
+  if(warn) warn.innerHTML = total > 4 * 1024 * 1024
+    ? '<span class="storage-warning">⚠️ Quasi pieno! Rimuovi immagini non necessarie.</span>' : '';
+}
+
+
+// ─── ORDERS ──────────────────────────────────────────────
+var currentFilter = 'tutti';
+
+function loadOrders() {
+  renderOrders();
+}
+
+function getOrders() {
+  try { return JSON.parse(localStorage.getItem('rg_orders') || '[]'); }
+  catch(e) { return []; }
+}
+
+function filterOrders(filter, btn) {
+  currentFilter = filter;
+  document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  renderOrders();
+}
+
+function renderOrders() {
+  var orders = getOrders();
+  var list = document.getElementById('ordersList');
+  var countEl = document.getElementById('ordersCount');
+
+  // Filter
+  var filtered = orders.filter(function(o) {
+    if(currentFilter === 'domicilio') return o.type !== 'asporto';
+    if(currentFilter === 'asporto')   return o.type === 'asporto';
+    if(currentFilter === 'nuovo')     return o.status === 'nuovo';
+    return true;
+  });
+
+  countEl.textContent = filtered.length + ' ordini trovati';
+
+  if(!filtered.length) {
+    list.innerHTML = '<div class="orders-empty"><span class="orders-empty-icon">📋</span>Nessun ordine ancora. Gli ordini appariranno qui non appena i clienti completeranno il checkout.</div>';
+    return;
+  }
+
+  list.innerHTML = filtered.map(function(o, idx) {
+    var isAsporto = o.type === 'asporto';
+    var addr = isAsporto
+      ? 'Ritiro in pizzeria'
+      : [o.via, o.civico, o.piano].filter(Boolean).join(' ');
+    var items = (o.items || []).map(function(i) { return i.qty + '× ' + i.name + ' — €' + (i.price*i.qty).toFixed(2); }).join('<br>');
+    var ts = o.timestamp ? new Date(o.timestamp).toLocaleString('it-IT',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : '—';
+    var statusClass = 'status-' + (o.status || 'nuovo');
+
+    return '<div class="order-card ' + statusClass + '" id="oc-' + o.orderId + '">' +
+      '<div class="order-card-header">' +
+        '<span class="order-id">' + o.orderId + '</span>' +
+        '<span class="order-type-badge ' + (isAsporto ? 'badge-asporto' : 'badge-domicilio') + '">' + (isAsporto ? '🛍 Asporto' : '🛵 Domicilio') + '</span>' +
+        '<span class="order-time">⏰ ' + (o.orario || '—') + '</span>' +
+        '<span class="order-ts">' + ts + '</span>' +
+      '</div>' +
+      '<div class="order-card-body">' +
+        '<div class="order-col">' +
+          '<div class="order-col-label">Cliente</div>' +
+          '<div class="order-name">' + (o.nome||'') + ' ' + (o.cognome||'') + '</div>' +
+          '<div class="order-info">📞 ' + (o.telefono||'—') + '<br>' + addr + (o.note ? '<br><em>Note: '+o.note+'</em>' : '') + '</div>' +
+        '</div>' +
+        '<div class="order-col">' +
+          '<div class="order-col-label">Ordine</div>' +
+          '<div class="order-items">' + (items || '—') + '</div>' +
+          '<div class="order-total">Tot: €' + (o.total||0).toFixed(2) + ' · ' + (o.delivery===0?'Consegna gratis':'Consegna €'+(o.delivery||0).toFixed(2)) + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="order-card-footer">' +
+        '<select class="order-status-sel" onchange="updateStatus(\'' + o.orderId + '\',this.value)">' +
+          '<option value="nuovo"'      + (o.status==='nuovo'?'       selected':'') + '>🟢 Nuovo</option>' +
+          '<option value="preparazione"'+ (o.status==='preparazione'?' selected':'') + '>🟡 In preparazione</option>' +
+          '<option value="pronto"'    + (o.status==='pronto'?'      selected':'') + '>🔴 Pronto / In consegna</option>' +
+          '<option value="consegnato"'+ (o.status==='consegnato'?'  selected':'') + '>✅ Consegnato</option>' +
+        '</select>' +
+        '<div style="display:flex;gap:.5rem;">' +
+          '<button class="btn-print-order" onclick="printOrder(\'' + o.orderId + '\')">🖨️ Stampa</button>' +
+          '<button class="btn-del-order" onclick="deleteOrder(\'' + o.orderId + '\')" title="Elimina">✕</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function updateStatus(orderId, status) {
+  var orders = getOrders();
+  var idx = orders.findIndex(function(o) { return o.orderId === orderId; });
+  if(idx > -1) {
+    orders[idx].status = status;
+    localStorage.setItem('rg_orders', JSON.stringify(orders));
+    // Update card class
+    var card = document.getElementById('oc-' + orderId);
+    if(card) {
+      card.className = card.className.replace(/status-\w+/, 'status-' + status);
+    }
+  }
+}
+
+function deleteOrder(orderId) {
+  if(!confirm('Eliminare questo ordine?')) return;
+  var orders = getOrders().filter(function(o) { return o.orderId !== orderId; });
+  localStorage.setItem('rg_orders', JSON.stringify(orders));
+  renderOrders();
+}
+
+function clearOldOrders() {
+  if(!confirm('Eliminare tutti gli ordini consegnati?')) return;
+  var orders = getOrders().filter(function(o) { return o.status !== 'consegnato'; });
+  localStorage.setItem('rg_orders', JSON.stringify(orders));
+  renderOrders();
+  showToast('Ordini consegnati rimossi');
+}
+
+function printOrder(orderId) {
+  var orders = getOrders();
+  var o = orders.find(function(x) { return x.orderId === orderId; });
+  if(!o) return;
+
+  var isAsporto = o.type === 'asporto';
+  var addr = isAsporto ? 'RITIRO IN PIZZERIA' : ([o.via, o.civico].filter(Boolean).join(' ') + (o.piano ? ' - ' + o.piano : ''));
+  var items = (o.items || []).map(function(i) {
+    var left = i.qty + 'x ' + i.name;
+    var right = 'E' + (i.price*i.qty).toFixed(2);
+    var dots = '';
+    var maxW = 30;
+    var dotsCount = maxW - left.length - right.length;
+    for(var d=0; d<Math.max(1,dotsCount); d++) dots += '.';
+    return '<div class="slip-row"><span>' + left + dots + '</span><span>' + right + '</span></div>';
+  }).join('');
+
+  var ts = o.timestamp ? new Date(o.timestamp).toLocaleString('it-IT') : '';
+
+  document.getElementById('slipContent').innerHTML =
+    '<div class="slip-title">LE REGINELLE</div>' +
+    '<div class="slip-center" style="font-size:9px;">Via L. Da Vinci 31b · Verona · 045 565242</div>' +
+    '<div class="slip-hr"></div>' +
+    '<div class="slip-row"><span class="slip-big">' + o.orderId + '</span><span class="slip-big">' + (isAsporto ? 'ASPORTO' : 'DOMICILIO') + '</span></div>' +
+    '<div class="slip-hr"></div>' +
+    '<div style="margin:2mm 0;"><strong>' + o.nome + ' ' + o.cognome + '</strong></div>' +
+    '<div>' + (o.telefono||'') + '</div>' +
+    '<div style="margin-top:1mm;">' + addr + '</div>' +
+    (o.note ? '<div style="margin-top:1mm;font-style:italic;">Note: ' + o.note + '</div>' : '') +
+    '<div class="slip-hr"></div>' +
+    '<div style="margin-bottom:1mm;font-weight:700;">ORE: ' + (o.orario||'—') + '</div>' +
+    '<div class="slip-hr"></div>' +
+    items +
+    '<div class="slip-hr"></div>' +
+    '<div class="slip-row"><span><strong>TOTALE</strong></span><span><strong>E' + (o.total||0).toFixed(2) + '</strong></span></div>' +
+    '<div class="slip-center" style="margin-top:1mm;font-size:9px;">Consegna: ' + (o.delivery===0?'GRATIS':'E'+(o.delivery||0).toFixed(2)) + '</div>' +
+    '<div class="slip-hr"></div>' +
+    '<div class="slip-center" style="font-size:9px;">' + ts + '</div>';
+
+  window.print();
+}
+
+
+// ─── PIN ─────────────────────────────────────────────────
+const PIN = '1234';
+let entered = '';
+
+function pinPress(n) {
+  if(entered.length >= 4) return;
+  entered += n;
+  updateDots();
+  if(entered.length === 4) setTimeout(checkPin, 150);
+}
+
+function pinDel() {
+  entered = entered.slice(0, -1);
+  updateDots();
+  document.getElementById('pinError').textContent = '';
+  document.querySelectorAll('.pin-dot').forEach(d => d.classList.remove('error'));
+}
+
+function updateDots() {
+  for(let i=0;i<4;i++) {
+    const d = document.getElementById('d'+i);
+    d.classList.toggle('filled', i < entered.length);
+    d.classList.remove('error');
+  }
+}
+
+function checkPin() {
+  if(entered === PIN) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('adminScreen').style.display = 'block';
+    loadAll();
+  } else {
+    document.querySelectorAll('.pin-dot').forEach(d => {
+      d.classList.remove('filled');
+      d.classList.add('error');
+    });
+    document.getElementById('pinError').textContent = 'PIN errato. Riprova.';
+    entered = '';
+    setTimeout(() => {
+      document.querySelectorAll('.pin-dot').forEach(d => d.classList.remove('error'));
+    }, 800);
+  }
+}
+
+function logout() {
+  document.getElementById('adminScreen').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  entered = '';
+  updateDots();
+}
+
+// ─── TABS ────────────────────────────────────────────────
+function showTab(id) {
+  document.querySelectorAll('.tab-btn').forEach((b,i) => {
+    b.classList.toggle('active', ['menu','consegna','media','ordini'][i] === id);
+  });
+  document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('active');
+}
+
+// ─── DEFAULT MENU ────────────────────────────────────────
+const DEFAULT_MENU = [
+  // CLASSICHE
+  { id:1,  emoji:'🍕', name:'Marinara',               desc:'Pomodoro, aglio, origano e olio evo',                                                    price:6.00,  cat:'Classiche' },
+  { id:2,  emoji:'🍕', name:'Marinara Extra',          desc:'Pomodorini cotti, aglio, origano e olio evo',                                            price:7.00,  cat:'Classiche' },
+  { id:3,  emoji:'🍕', name:'Margherita',              desc:'Pomodoro, mozzarella fiordilatte, basilico e olio evo',                                  price:7.00,  cat:'Classiche' },
+  { id:4,  emoji:'🌿', name:'Bufalina',                desc:'Pomodoro, mozzarella di bufala, basilico e olio evo',                                    price:10.50, cat:'Classiche' },
+  { id:5,  emoji:'🐟', name:'Romana',                  desc:'Pomodoro, origano, aglio, acciughe, capperi, olive nere e olio evo',                     price:8.50,  cat:'Classiche' },
+  { id:6,  emoji:'🍕', name:'Prosciutto',              desc:'Pomodoro, mozzarella fiordilatte, prosciutto cotto e olio evo',                          price:8.50,  cat:'Classiche' },
+  { id:7,  emoji:'🍄', name:'Funghi',                  desc:'Pomodoro, mozzarella fiordilatte, funghi champignon e olio evo',                         price:8.50,  cat:'Classiche' },
+  { id:8,  emoji:'🌶️', name:'Diavola',                 desc:'Pomodoro, mozzarella fiordilatte, salame piccante e olio evo',                           price:9.00,  cat:'Classiche' },
+  { id:9,  emoji:'🫒', name:'Maruzzella',              desc:'Pomodoro, mozzarella fiordilatte, acciughe, origano, olive nere e olio evo',              price:8.50,  cat:'Classiche' },
+  { id:10, emoji:'🍄', name:'Capricciosa',             desc:'Pomodoro, mozzarella fiordilatte, prosciutto, carciofini, funghi e olio evo',            price:10.50, cat:'Classiche' },
+  // SPECIALI
+  { id:11, emoji:'🐟', name:'Pugliese',                desc:'Pomodorini, mozzarella fiordilatte, tonno, cipolla, olive nere e olio evo',              price:10.50, cat:'Speciali' },
+  { id:12, emoji:'🍆', name:'Siciliana',               desc:'Pomodorini cotti, mozzarella, prosciutto cotto, melanzane fritte, pecorino e olio evo',  price:10.00, cat:'Speciali' },
+  { id:13, emoji:'🫑', name:'Cafona',                  desc:'Pomodoro, mozzarella fiordilatte, salsiccia, peperoni, gorgonzola e olio evo',           price:10.50, cat:'Speciali' },
+  { id:14, emoji:'🍄', name:'Contadina',               desc:'Pomodoro, mozzarella fiordilatte, salsiccia, funghi porcini, cipolla rossa e olio evo',  price:11.00, cat:'Speciali' },
+  { id:15, emoji:'🌶️', name:'Bergamasca',              desc:'Pomodoro, mozzarella fiordilatte, gorgonzola, salame piccante e olio evo',               price:10.00, cat:'Speciali' },
+  { id:16, emoji:'🧀', name:'Scarpetta',               desc:'Pomodorini cotti, mozzarella fiordilatte, pecorino, pepe, basilico e olio evo',          price:9.50,  cat:'Speciali' },
+  { id:17, emoji:'🍟', name:'Pub',                     desc:'Pomodoro, mozzarella fiordilatte, wurstel, patatine fritte e olio evo',                  price:9.50,  cat:'Speciali' },
+  { id:18, emoji:'🥦', name:'Ortolana',                desc:'Pomodorini, mozzarella fiordilatte, melanzane, zucchine, peperoni e olio evo',           price:10.50, cat:'Speciali' },
+  // CON PROVOLA
+  { id:19, emoji:'🥓', name:'Cafuncella',              desc:'Provola affumicata, patate al forno, pancetta, grana e olio evo',                        price:10.50, cat:'Con Provola' },
+  { id:80, emoji:'🌿', name:'Crudo e Philadelphia',    desc:'Pomodoro, mozzarella fiordilatte, prosciutto crudo, philadelphia, rucola e olio evo',    price:11.50, cat:'Con Provola' },
+  { id:20, emoji:'🌿', name:'Parmigiana',              desc:'Parmigiana di melanzane, provola affumicata e olio evo',                                 price:10.50, cat:'Con Provola' },
+  { id:21, emoji:'🌿', name:'Salsiccia e Friarielli',  desc:'Provola affumicata, salsiccia, friarielli e olio evo',                                   price:11.50, cat:'Con Provola' },
+  { id:22, emoji:'🫒', name:'Scarurella',              desc:'Provola affumicata, scarole, olive nere, capperi, scaglie di pecorino, pinoli e olio evo',price:10.00, cat:'Con Provola' },
+  { id:23, emoji:'🍄', name:'Casareccia',              desc:'Provola affumicata, patate al forno, salsiccia, funghi porcini e olio evo',              price:10.50, cat:'Con Provola' },
+  { id:24, emoji:'🍋', name:'Amalfitana',              desc:'Provola affumicata, limone a fettine, pepe, pesto di basilico e olio evo',               price:10.00, cat:'Con Provola' },
+  { id:25, emoji:'🌿', name:'Genovese',                desc:'Ombra di pomodoro, pomodorini, provola affumicata, pesto, ricotta salata e olio evo',    price:10.50, cat:'Con Provola' },
+  { id:26, emoji:'🥓', name:'Fiocco',                  desc:'Panna, provola affumicata, prosciutto cotto, patate schiacciate e olio evo',             price:10.00, cat:'Con Provola' },
+  { id:27, emoji:'🥔', name:'A Gatto',                 desc:'Provola affumicata, salame dolce, patate schiacciate e olio evo',                        price:10.00, cat:'Con Provola' },
+  { id:28, emoji:'🧀', name:'Ciccioli e Ricotta',      desc:'Ricotta, provola affumicata, ciccioli, pepe e olio evo',                                 price:9.50,  cat:'Con Provola' },
+  { id:29, emoji:'🌸', name:'Pistacchiella',           desc:'Provola affumicata, pomodorini gialli, mortadella, granella di pistacchi e olio evo',    price:11.00, cat:'Con Provola' },
+  { id:30, emoji:'🥩', name:'Porchetta',               desc:'Provola, patate al forno, porchetta, funghi porcini e olio evo',                         price:10.50, cat:'Con Provola' },
+  // FORMAGGI
+  { id:31, emoji:'🧀', name:'Amatriciana',             desc:'Pomodorini cotti, guanciale, cipolla, mozzarella fiordilatte, pecorino e olio evo',      price:10.50, cat:'Formaggi' },
+  { id:32, emoji:'🧀', name:'Formaggi e Noci',         desc:'Mozzarella fiordilatte, crema mix di formaggi, gorgonzola, noci e olio evo',             price:10.00, cat:'Formaggi' },
+  { id:33, emoji:'🥒', name:'Formaggi e Zucchine',     desc:'Mix di formaggi, mozzarella fiordilatte, zucchine, philadelphia e olio evo',             price:10.00, cat:'Formaggi' },
+  { id:34, emoji:'🥓', name:'Formaggi e Pancetta',     desc:'Mix di formaggi, mozzarella fiordilatte, misto funghi, pancetta, philadelphia e olio evo',price:10.50, cat:'Formaggi' },
+  { id:35, emoji:'🍄', name:'Taleggio e Porcini',      desc:'Mozzarella fiordilatte, funghi porcini, taleggio, prezzemolo e olio evo',                price:11.00, cat:'Formaggi' },
+  { id:36, emoji:'🥚', name:'Carbonara',               desc:"Provola, guanciale, tuorlo d'uovo, pepe, pecorino e olio evo",                          price:12.50, cat:'Formaggi' },
+  // CON SPECK
+  { id:37, emoji:'🍖', name:'Tirolese',                desc:'Pomodoro, mozzarella fiordilatte, speck, funghi porcini e olio evo',                     price:11.00, cat:'Con Speck' },
+  { id:38, emoji:'🥜', name:'Speck e Noci',            desc:'Mozzarella fiordilatte, gorgonzola, speck, noci e olio evo',                             price:11.00, cat:'Con Speck' },
+  { id:39, emoji:'🌿', name:'Speck e Radicchio',       desc:'Mozzarella fiordilatte, speck, radicchio, panna, gorgonzola, noci e olio evo',           price:11.00, cat:'Con Speck' },
+  { id:40, emoji:'🌿', name:'Radicchio e Salamino',    desc:'Mozzarella fiordilatte, salamino piccante, radicchio, ricotta salata e olio evo',        price:11.00, cat:'Con Speck' },
+  // PREMIUM
+  { id:41, emoji:'🌶️', name:'Zingara',                 desc:'Pomodorini, mozzarella, peperoni, salame piccante, olive nere e olio evo',               price:11.50, cat:'Premium' },
+  { id:42, emoji:'🍄', name:'Funghi e Guanciale',      desc:'Pomodorini, mozzarella, misto funghi, guanciale, petali di grana, rosmarino e olio evo', price:11.50, cat:'Premium' },
+  { id:43, emoji:'🌿', name:'Primavera',               desc:'Pomodorini, mozzarella, prosciutto crudo, rucola, petali di grana e olio evo',           price:11.50, cat:'Premium' },
+  { id:44, emoji:'🐟', name:'Mediterranea',            desc:'Pomodorini gialli, mozzarella, acciughe, olive nere, prezzemolo e olio evo',             price:10.50, cat:'Premium' },
+  { id:45, emoji:'🌸', name:'Mortadella e Panzarotto', desc:'Provola affumicata, mortadella, crocche di patate, granella di pistacchi e olio evo',    price:11.50, cat:'Premium' },
+  { id:46, emoji:'🎃', name:'Zucca e Salsiccia',       desc:'Crema di zucca, provola affumicata, salsiccia, petali di grana e olio evo',              price:11.50, cat:'Premium' },
+  { id:47, emoji:'🌿', name:'Bufala e Radicchio',      desc:'Mozzarella di bufala, pomodorini, salsiccia, radicchio e olio evo',                      price:11.50, cat:'Premium' },
+  { id:48, emoji:'🍆', name:'Bufala e Melanzane',      desc:'Mozzarella di bufala, melanzane, funghetti, pomodorini, speck, petali di grana e olio evo',price:12.00, cat:'Premium' },
+  { id:49, emoji:'🌿', name:'Bufalina ai 2 Pomodori',  desc:'Mozzarella di bufala, pomodorino giallo cotto, pomodorino rosso cotto, petali di grana e olio evo',price:13.50, cat:'Premium' },
+  { id:50, emoji:'🥔', name:'Patate e Guanciale',      desc:'Provola, sfoglia di patate al forno, guanciale, fonduta di emmental, cipolla e olio evo',price:12.50, cat:'Premium' },
+  { id:51, emoji:'🦐', name:'Zucchine e Gamberetti',   desc:'Pomodorini, mozzarella fiordilatte, zucchine, gamberetti, prezzemolo e olio evo',        price:13.00, cat:'Premium' },
+  { id:52, emoji:'🌸', name:'Ciurillo',                desc:'Mozzarella fiordilatte, fiori di zucca, salame Napoli, ricotta, pepe, scaglie di grana e olio evo (stagionale)',price:12.50, cat:'Premium' },
+  { id:53, emoji:'🍄', name:'Tartufo e Salsiccia',     desc:'Mozzarella fiordilatte, fonduta di bufala, salsiccia, crema di tartufo, petali di grana e olio evo',price:13.00, cat:'Premium' },
+  { id:54, emoji:'🥓', name:'Tartufo e Pancetta',      desc:'Provola affumicata, pancetta, patate schiacciate, crema di tartufo, petali di grana e olio evo',price:13.00, cat:'Premium' },
+  { id:55, emoji:'🍐', name:'Gorgonzola e Pere',       desc:'Provola affumicata, gorgonzola, pere, fonduta di bufala, noci e olio evo',               price:13.00, cat:'Premium' },
+  { id:56, emoji:'🍄', name:'Salsiccia e Funghi',      desc:'Provola affumicata, fonduta di bufala, cipolla rossa, salsiccia, funghi misti e olio evo',price:13.00, cat:'Premium' },
+  { id:57, emoji:'🐟', name:'Stracciatella e Salmone', desc:'Mozzarella fiordilatte, pomodorini, salmone, stracciatella, rucola, limone e olio evo',  price:13.50, cat:'Premium' },
+  { id:58, emoji:'🐟', name:'Salmone e Philadelphia',  desc:'Mozzarella fiordilatte, pomodorini, salmone, philadelphia e olio evo',                   price:13.50, cat:'Premium' },
+  // RIPIENE
+  { id:62, emoji:'🫓', name:'Ripieno al Salame',                  desc:'Pomodoro, ricotta, mozzarella fiordilatte, salame dolce, pepe e olio evo',       price:10.50, cat:'Ripiene' },
+  { id:63, emoji:'🫓', name:'Ripieno al Prosciutto',              desc:'Pomodoro, ricotta, mozzarella fiordilatte, prosciutto, pepe e olio evo',          price:10.50, cat:'Ripiene' },
+  { id:64, emoji:'🫓', name:'Ripieno alle Scarole',               desc:'Pomodoro, provola affumicata, scarole, olive nere, capperi, pecorino e olio evo', price:10.50, cat:'Ripiene' },
+  { id:65, emoji:'🫓', name:'Ripieno con Salsiccia e Friarielli', desc:'Pomodoro, salsiccia, friarielli e provola',                                        price:11.50, cat:'Ripiene' },
+  // PIADEPIZZE
+  { id:66, emoji:'🥙', name:'Prosciutto Crudo di Parma e Bufala', desc:'Prosciutto crudo di Parma, mozzarella di bufala campana, pomodoro cuor di bue e insalata', price:13.50, cat:'Piadepizze' },
+  { id:67, emoji:'🥙', name:'Crudo e Stracciatella',              desc:'Prosciutto crudo di Parma, stracciatella di bufala, pomodorini datterini, rucola e petali di grana padano', price:13.50, cat:'Piadepizze' },
+  { id:68, emoji:'🥙', name:'Prosciutto Cotto e Bufala',          desc:'Prosciutto cotto, mozzarella di bufala, pomodorini datterini e insalata',          price:12.50, cat:'Piadepizze' },
+  { id:69, emoji:'🥙', name:'Speck e Bufala',                     desc:'Speck, mozzarella di bufala, insalata e misto funghi',                             price:13.50, cat:'Piadepizze' },
+  // SALTIMBOCCA
+  { id:70, emoji:'🥪', name:'Salsiccia, Friarielli e Provola',             desc:'', price:11.00, cat:'Saltimbocca' },
+  { id:71, emoji:'🥪', name:'Mozzarella di Bufala e Prosciutto Crudo',     desc:'', price:11.00, cat:'Saltimbocca' },
+  { id:72, emoji:'🥪', name:'Provola, Salsiccia e Peperoni',               desc:'', price:11.00, cat:'Saltimbocca' },
+  { id:73, emoji:'🥪', name:'Provola, Porchetta e Funghi Misti',           desc:'', price:11.00, cat:'Saltimbocca' },
+  { id:74, emoji:'🥪', name:'Provola, Pancetta e Funghi Misti',            desc:'', price:11.00, cat:'Saltimbocca' },
+  { id:75, emoji:'🥪', name:'Mozzarella, Pancetta e Carciofini',           desc:'', price:11.00, cat:'Saltimbocca' },
+  { id:76, emoji:'🥪', name:'Provola, Porchetta e Friarielli',             desc:'', price:11.00, cat:'Saltimbocca' },
+  { id:77, emoji:'🥪', name:'Prosciutto Cotto, Mozzarella e Zucchine',     desc:'', price:11.00, cat:'Saltimbocca' },
+  { id:78, emoji:'🥪', name:'Provola, Porchetta e Parmigiana',             desc:'', price:11.00, cat:'Saltimbocca' },
+  { id:79, emoji:'🥪', name:'Zingariello',                                 desc:'Pomodorino, tonno, cipolla rossa, mozzarella di bufala e insalata', price:11.00, cat:'Saltimbocca' },
+  // EXTRA
+  { id:59, emoji:'💧', name:'Acqua naturale/frizzante', desc:'75cl',            price:1.50, cat:'extra' },
+  { id:60, emoji:'🍺', name:'Birra artigianale',         desc:'Birra in bottiglia', price:3.50, cat:'extra' },
+  { id:61, emoji:'🍮', name:'Tiramisu',                  desc:'Fatto in casa',      price:4.00, cat:'extra' },
+];
+
+const DEFAULT_DELIVERY = { cost:2.00, alwaysFree:false, freeThreshold:20, zone:'Consegniamo in tutta Verona e dintorni. Chiama al 045 565242 per info sulla zona. Tempo medio: 30–45 minuti.' };
+
+// ─── LOAD ────────────────────────────────────────────────
+function loadAll() {
+  loadMenu();
+  loadDelivery();
+  loadMedia();
+  loadOrders();
+}
+
+function getMenu()     { try { return JSON.parse(localStorage.getItem('rg_menu')) || DEFAULT_MENU; } catch { return DEFAULT_MENU; } }
+function getDelivery() { try { return JSON.parse(localStorage.getItem('rg_delivery')) || DEFAULT_DELIVERY; } catch { return DEFAULT_DELIVERY; } }
+
+function loadMenu() {
+  const menu = getMenu();
+  const body = document.getElementById('menuBody');
+  body.innerHTML = '';
+  menu.forEach((item, idx) => addRowData(item, idx));
+}
+
+function loadDelivery() {
+  const d = getDelivery();
+  document.getElementById('deliveryCost').value      = d.cost;
+  document.getElementById('deliveryFreeToggle').checked = d.alwaysFree;
+  document.getElementById('freeThreshold').value     = d.freeThreshold;
+  document.getElementById('deliveryZone').value      = d.zone;
+  toggleFree();
+}
+
+function toggleFree() {
+  const isFree = document.getElementById('deliveryFreeToggle').checked;
+  document.getElementById('deliveryCost').disabled   = isFree;
+  document.getElementById('freeThreshold').disabled  = isFree;
+}
+
+
+// ─── EMOJI GROUPS ────────────────────────────────────────
+const EMOJI_GROUPS = [
+  { label:'Pizze',    emojis:['🍕','🔥','⭐','🌶️','🧄','🫒','🍄','🌿','🍃','🥩','🐷','🍗','🧅','🫑','🫓'] },
+  { label:'Dolci',   emojis:['🍮','🍰','🍩','🍪','🧁','🍫','🍬','🍭','🍓','🍇','🍑','🍋','🫐'] },
+  { label:'Bevande', emojis:['🍺','🍻','🥤','💧','🧃','☕','🍵','🥛','🍷','🍸','🍹','🧋','🫖'] },
+  { label:'Fritto',  emojis:['🍟','🍗','🌭','🥙','🌮','🥚','🧆','🫔','🥘','🍲'] },
+  { label:'Altro',   emojis:['🥗','🥑','🧀','🥩','🍖','🦐','🐟','🦑','🍅','🥦','🌽','🫛','🥕'] },
+];
+
+let activePickerBtn = null;
+
+function openEmojiPicker(btn) {
+  // Close any open picker
+  document.querySelectorAll('.emoji-picker.open').forEach(p => {
+    p.classList.remove('open');
+  });
+  if(activePickerBtn === btn) { activePickerBtn = null; return; }
+  activePickerBtn = btn;
+
+  // Build picker content
+  const picker = btn.nextElementSibling;
+  picker.innerHTML = EMOJI_GROUPS.map(g => `
+    <div class="emoji-picker-label">${g.label}</div>
+    ${g.emojis.map(e => `<button class="emoji-opt" onclick="pickEmoji(this,'${e}')">${e}</button>`).join('')}
+  `).join('');
+  picker.classList.add('open');
+}
+
+function pickEmoji(optBtn, emoji) {
+  const picker = optBtn.closest('.emoji-picker');
+  const emojiBtn = picker.previousElementSibling;
+  emojiBtn.textContent = emoji;
+  // Store on the row
+  emojiBtn.closest('tr').dataset.emoji = emoji;
+  picker.classList.remove('open');
+  activePickerBtn = null;
+}
+
+// Close picker on outside click
+document.addEventListener('click', (e) => {
+  if(!e.target.closest('.td-emoji')) {
+    document.querySelectorAll('.emoji-picker.open').forEach(p => p.classList.remove('open'));
+    activePickerBtn = null;
+  }
+});
+
+// ─── RENDER ROW ──────────────────────────────────────────
+let nextId = 100;
+
+function addRowData(item, idx) {
+  const body = document.getElementById('menuBody');
+  const tr = document.createElement('tr');
+  tr.dataset.id = item.id || nextId++;
+  tr.dataset.emoji = item.emoji || '🍕';
+  tr.innerHTML = `
+    <td class="td-emoji">
+      <button class="emoji-btn" onclick="openEmojiPicker(this)" title="Cambia emoji">${item.emoji || '🍕'}</button>
+      <div class="emoji-picker"></div>
+    </td>
+    <td><input class="cell-input" type="text" name="name" value="${esc(item.name)}" placeholder="Nome voce"></td>
+    <td><input class="cell-input" type="text" name="desc" value="${esc(item.desc)}" placeholder="Ingredienti / descrizione"></td>
+    <td><input class="cell-input cell-price" type="number" name="price" value="${item.price.toFixed(2)}" min="0" step="0.5"></td>
+    <td class="td-category">
+      <select name="cat" style="border:none;background:transparent;font-family:inherit;font-size:.82rem;color:rgba(26,18,8,.6);outline:none;cursor:pointer;width:100%;">
+        <option value="Classiche"   ${item.cat==='Classiche'  ?'selected':''}>Classiche</option>
+        <option value="Speciali"    ${item.cat==='Speciali'   ?'selected':''}>Speciali</option>
+        <option value="Con Provola" ${item.cat==='Con Provola'?'selected':''}>Con Provola</option>
+        <option value="Formaggi"    ${item.cat==='Formaggi'   ?'selected':''}>Formaggi</option>
+        <option value="Con Speck"   ${item.cat==='Con Speck'  ?'selected':''}>Con Speck</option>
+        <option value="Premium"     ${item.cat==='Premium'    ?'selected':''}>Premium</option>
+        <option value="Ripiene"     ${item.cat==='Ripiene'    ?'selected':''}>Ripiene</option>
+        <option value="Piadepizze"  ${item.cat==='Piadepizze' ?'selected':''}>Piadepizze</option>
+        <option value="Saltimbocca" ${item.cat==='Saltimbocca'?'selected':''}>Saltimbocca</option>
+        <option value="extra"       ${item.cat==='extra'      ?'selected':''}>Extra</option>
+        <option value="pizza"       ${item.cat==='pizza'      ?'selected':''}>Pizza (generico)</option>
+      </select>
+    </td>
+    <td><button class="btn-del-row" onclick="delRow(this)" title="Rimuovi">✕</button></td>
+  `;
+  body.appendChild(tr);
+}
+
+function addRow() {
+  addRowData({ id: nextId++, emoji:'🍕', name:'', desc:'', price:0.00, cat:'pizza' });
+  // Focus new row
+  const rows = document.querySelectorAll('#menuBody tr');
+  rows[rows.length-1].querySelector('input[name="name"]').focus();
+}
+
+function delRow(btn) {
+  if(document.querySelectorAll('#menuBody tr').length <= 1) return;
+  btn.closest('tr').remove();
+}
+
+function esc(s) { return (s||'').replace(/"/g,'&quot;'); }
+
+// ─── SAVE MENU ───────────────────────────────────────────
+function saveMenu() {
+  const rows = document.querySelectorAll('#menuBody tr');
+  const menu = [];
+  let hasError = false;
+
+  rows.forEach((tr, idx) => {
+    const name  = tr.querySelector('[name="name"]').value.trim();
+    const desc  = tr.querySelector('[name="desc"]').value.trim();
+    const price = parseFloat(tr.querySelector('[name="price"]').value);
+    const cat   = tr.querySelector('[name="cat"]').value;
+    const emoji = (tr.dataset.emoji || tr.querySelector('.emoji-btn')?.textContent.trim() || '🍕');
+
+    if(!name) { tr.querySelector('[name="name"]').style.borderColor='var(--error)'; hasError=true; return; }
+    menu.push({ id: parseInt(tr.dataset.id)||idx+1, emoji, name, desc, price: isNaN(price)?0:price, cat });
+  });
+
+  if(hasError) { showToast('Compila tutti i nomi', true); return; }
+
+  localStorage.setItem('rg_menu', JSON.stringify(menu));
+  showToast('✓ Menu salvato — le pagine ordine si aggiornano automaticamente');
+}
+
+// ─── SAVE DELIVERY ───────────────────────────────────────
+function saveDelivery() {
+  const d = {
+    cost:          parseFloat(document.getElementById('deliveryCost').value) || 0,
+    alwaysFree:    document.getElementById('deliveryFreeToggle').checked,
+    freeThreshold: parseFloat(document.getElementById('freeThreshold').value) || 0,
+    zone:          document.getElementById('deliveryZone').value.trim(),
+  };
+  localStorage.setItem('rg_delivery', JSON.stringify(d));
+  showToast('✓ Impostazioni consegna salvate');
+}
+
+// ─── TOAST ───────────────────────────────────────────────
+function showToast(msg, isErr=false) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast on' + (isErr ? ' err' : '');
+  setTimeout(() => el.classList.remove('on'), 3000);
+}
+</script>
+</body>
+</html>
