@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Prenota un tavolo – Le Reginelle</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bordeaux:#7B1D2E; --bordeaux-dark:#4A0E1A; --bordeaux-deep:#2E0810;
+  --olive:#5C6B3A; --olive-light:#8B9C5A;
+  --cream:#F4EFE3; --cream-dark:#E8DFC8;
+  --gold:#C8A96E; --gold-light:#DFC090;
+  --noir:#1A1208; --white:#FDFAF4;
+  --border:rgba(200,169,110,0.18);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;overflow-x:hidden;}
+body{background:var(--cream);color:var(--noir);font-family:'Cormorant Garamond',serif;min-height:100vh;overflow-x:hidden;}
+
+/* ── HEADER ── */
+header{
+  position:sticky;top:0;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 2rem;height:64px;
+  background:var(--bordeaux-deep);
+  border-bottom:1px solid rgba(200,169,110,.2);
+}
+.logo-wrap{display:flex;align-items:center;gap:.75rem;text-decoration:none;}
+.logo-crest{width:40px;height:40px;background: transparent;border:1.5px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--gold);font-style:italic;}
+.logo-name{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--cream);}
+.logo-sub{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);}
+.back-link{font-size:.75rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(244,239,227,.5);text-decoration:none;display:flex;align-items:center;gap:.4rem;transition:color .2s;}
+.back-link:hover{color:var(--gold);}
+
+/* ── LAYOUT ── */
+.page-wrap{
+  max-width:1080px;margin:0 auto;
+  padding:2.5rem 1.5rem 5rem;
+  display:grid;
+  grid-template-columns:1fr 320px;
+  gap:2.5rem;
+  align-items:start;
+}
+
+/* ── PAGE HEADING ── */
+.page-heading{
+  margin-bottom:1.5rem;
+}
+.page-heading-label{
+  font-size:.7rem;letter-spacing:.45em;text-transform:uppercase;
+  color:var(--olive);margin-bottom:.4rem;
+}
+.page-heading-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(1.6rem,3vw,2.4rem);
+  font-style:italic;font-weight:700;
+  color:var(--bordeaux-dark);line-height:1.1;
+}
+
+/* ── LEGEND ── */
+.legend{
+  display:flex;gap:1.5rem;flex-wrap:wrap;
+  margin-bottom:1.2rem;align-items:center;
+}
+.legend-item{display:flex;align-items:center;gap:.5rem;font-size:.78rem;color:rgba(26,18,8,.6);}
+.legend-pip{width:10px;height:10px;border-radius:50%;}
+.pip-free    {background:var(--olive-light);}
+.pip-booked  {background:var(--bordeaux);}
+.pip-selected{background:var(--gold);}
+
+/* ── FLOOR PLAN ── */
+.floor-wrap{
+  background:var(--white);
+  border:1px solid var(--border);
+  border-radius:8px;
+  overflow:hidden;
+}
+
+.floor-room{
+  position:relative;
+  width:100%;
+  aspect-ratio:4/3;
+  background:#f7f2e8;
+  /* Subtle grid */
+  background-image:
+    linear-gradient(rgba(180,155,100,.07) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(180,155,100,.07) 1px,transparent 1px);
+  background-size:48px 48px;
+}
+
+/* Walls (border already from floor-wrap) */
+/* Kitchen bar at bottom */
+.room-kitchen{
+  position:absolute;bottom:0;left:0;right:0;height:11%;
+  background:linear-gradient(to top,#cba87a,#d9bc94);
+  border-top:2px solid #a88050;
+  display:flex;align-items:center;justify-content:center;
+  gap:2rem;
+}
+.room-kitchen-label{
+  font-size:.6rem;letter-spacing:.35em;text-transform:uppercase;
+  color:rgba(50,30,10,.5);font-family:'Cormorant Garamond',serif;
+}
+
+/* Entrance top-center */
+.room-entrance{
+  position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:12%;height:6%;
+  border-bottom-left-radius:60px;border-bottom-right-radius:60px;
+  border:1.5px solid #a88050;border-top:none;
+  background:rgba(200,169,110,.12);
+  display:flex;align-items:flex-end;justify-content:center;
+  padding-bottom:2px;
+}
+.room-entrance-label{font-size:.45rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(50,30,10,.35);}
+
+/* Windows - just thin lines on the walls */
+.room-window{
+  position:absolute;
+  background:rgba(180,210,230,.4);
+  border:1.5px solid rgba(140,180,210,.5);
+}
+
+/* Divider line (room section) */
+.room-divider{
+  position:absolute;
+  background:rgba(180,155,100,.2);
+}
+
+/* ── TABLES ── */
+.tbl{
+  position:absolute;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  transition:transform .18s ease, box-shadow .18s ease;
+  z-index:10;
+  transform:translate(-50%,-50%);
+}
+
+/* Round table */
+.tbl-round{border-radius:50%;}
+/* Rect table */
+.tbl-rect{border-radius:5px;}
+
+/* States */
+.tbl-free{
+  background:rgba(139,156,90,.12);
+  border:2px solid var(--olive-light);
+}
+.tbl-free:hover{
+  background:rgba(139,156,90,.22);
+  transform:translate(-50%,-50%) scale(1.09);
+  box-shadow:0 4px 18px rgba(92,107,58,.25);
+}
+.tbl-booked{
+  background:rgba(123,29,46,.09);
+  border:2px solid var(--bordeaux);
+  cursor:default;
+}
+.tbl-selected{
+  background:rgba(200,169,110,.2);
+  border:2.5px solid var(--gold);
+  transform:translate(-50%,-50%) scale(1.1);
+  box-shadow:0 4px 22px rgba(200,169,110,.35);
+  cursor:default;
+}
+
+/* Table number – only text inside */
+.tbl-num{
+  font-family:'Playfair Display',serif;
+  font-weight:700;font-style:italic;
+  line-height:1;
+  pointer-events:none;
+  user-select:none;
+}
+.tbl-free    .tbl-num{color:var(--olive);}
+.tbl-booked  .tbl-num{color:var(--bordeaux);}
+.tbl-selected .tbl-num{color:var(--bordeaux-dark);}
+
+/* ── RIGHT PANEL ── */
+.panel{
+  background:var(--white);
+  border:1px solid var(--border);
+  border-radius:8px;
+  overflow:hidden;
+  position:sticky;
+  top:80px;
+}
+
+.panel-top{
+  padding:1.3rem 1.5rem 1rem;
+  border-bottom:1px solid var(--border);
+}
+.panel-top-label{font-size:.68rem;letter-spacing:.35em;text-transform:uppercase;color:var(--olive);margin-bottom:.25rem;}
+.panel-top-title{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;font-style:italic;color:var(--bordeaux-dark);}
+
+.panel-body{padding:1.4rem 1.5rem;}
+
+/* Empty */
+.p-empty{
+  display:flex;flex-direction:column;align-items:center;
+  gap:.6rem;padding:1.5rem 0;
+  text-align:center;color:rgba(26,18,8,.35);
+  font-size:.95rem;font-style:italic;
+}
+.p-empty-icon{font-size:2rem;opacity:.5;}
+
+/* Selected table chip */
+.tbl-chip{
+  display:none;
+  align-items:center;gap:.8rem;
+  background:var(--cream);
+  border:1.5px solid var(--gold);
+  border-radius:5px;
+  padding:.7rem 1rem;
+  margin-bottom:1.2rem;
+}
+.tbl-chip.on{display:flex;}
+.tbl-chip-num{
+  font-family:'Playfair Display',serif;
+  font-size:1.6rem;font-weight:900;font-style:italic;
+  color:var(--bordeaux);line-height:1;
+}
+.tbl-chip-info{font-size:.88rem;color:rgba(26,18,8,.55);}
+
+/* Form */
+.form-section{display:none;}
+.form-section.on{display:block;}
+
+.f-group{margin-bottom:.9rem;}
+.f-label{
+  display:block;font-size:.68rem;letter-spacing:.25em;
+  text-transform:uppercase;color:var(--olive);
+  font-weight:600;margin-bottom:.3rem;
+}
+input[type="text"],input[type="date"],select{
+  width:100%;padding:.65rem .9rem;
+  border:1.5px solid var(--border);border-radius:4px;
+  font-family:'Cormorant Garamond',serif;font-size:1rem;
+  color:var(--noir);background:var(--cream);
+  outline:none;transition:border-color .2s,box-shadow .2s;
+  -webkit-appearance:none;
+}
+input:focus,select:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(200,169,110,.1);}
+input.err{border-color:#c0392b;}
+.err-msg{font-size:.75rem;color:#c0392b;margin-top:.18rem;font-style:italic;}
+.f-row{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;}
+
+/* People */
+.ppl-row{display:flex;align-items:center;gap:.7rem;height:38px;}
+.ppl-btn{
+  width:30px;height:30px;border-radius:50%;
+  border:1.5px solid var(--border);background:var(--cream);
+  cursor:pointer;font-size:1.1rem;line-height:1;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--bordeaux);transition:all .15s;flex-shrink:0;
+}
+.ppl-btn:hover{background:var(--bordeaux);border-color:var(--bordeaux);color:#fff;}
+.ppl-n{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:var(--noir);min-width:20px;text-align:center;}
+.ppl-cap{font-size:.78rem;color:rgba(26,18,8,.38);font-style:italic;}
+
+/* Time slots */
+.slots{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.4rem;}
+.slot{
+  padding:.35rem .7rem;
+  border:1.5px solid var(--border);border-radius:4px;
+  font-size:.85rem;cursor:pointer;
+  background:var(--cream);color:rgba(26,18,8,.7);
+  transition:all .18s;user-select:none;
+}
+.slot:hover{border-color:var(--gold);color:var(--bordeaux);}
+.slot.on{background:var(--bordeaux);border-color:var(--bordeaux);color:var(--cream);font-weight:600;}
+.slot-divider{width:100%;height:0;border-top:1px solid var(--border);margin:.2rem 0;}
+.no-slots{font-size:.88rem;color:rgba(26,18,8,.4);font-style:italic;padding:.4rem 0;}
+
+/* CTA */
+.btn-book{
+  width:100%;padding:.95rem;margin-top:1rem;
+  background:var(--bordeaux);border:1.5px solid var(--gold);
+  color:var(--cream);
+  font-family:'Cormorant Garamond',serif;
+  font-size:.85rem;letter-spacing:.2em;text-transform:uppercase;font-weight:700;
+  border-radius:4px;cursor:pointer;transition:all .22s;
+}
+.btn-book:hover{background:var(--gold);color:var(--bordeaux-deep);}
+
+/* Bookings log */
+.log{margin-top:1.2rem;padding-top:1.2rem;border-top:1px solid var(--border);display:none;}
+.log.on{display:block;}
+.log-label{font-size:.66rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(26,18,8,.35);margin-bottom:.6rem;}
+.log-item{
+  display:flex;align-items:baseline;gap:.5rem;
+  padding:.4rem 0;border-bottom:1px solid rgba(200,169,110,.1);
+  font-size:.88rem;
+}
+.log-item:last-child{border-bottom:none;}
+.log-t{font-family:'Playfair Display',serif;font-style:italic;font-weight:700;color:var(--bordeaux-dark);flex-shrink:0;}
+.log-d{color:rgba(26,18,8,.55);}
+
+/* Toast */
+.toast{
+  position:fixed;bottom:2rem;left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:var(--bordeaux-deep);color:var(--cream);
+  border:1px solid var(--gold);
+  padding:.8rem 1.6rem;border-radius:5px;
+  font-family:'Cormorant Garamond',serif;font-size:.95rem;
+  letter-spacing:.05em;
+  box-shadow:0 8px 30px rgba(0,0,0,.18);
+  z-index:999;transition:transform .35s cubic-bezier(.34,1.56,.64,1);
+  white-space:nowrap;max-width:90vw;text-align:center;
+}
+.toast.on{transform:translateX(-50%) translateY(0);}
+
+/* Responsive */
+@media(max-width:820px){
+  .page-wrap{grid-template-columns:1fr;gap:1.5rem;}
+  .panel{position:static;}
+  .floor-room{aspect-ratio:3/2;}
+}
+@media(max-width:500px){
+  header{padding:0 1rem;}
+  .page-wrap{padding:1.5rem 1rem 4rem;}
+  .floor-room{aspect-ratio:1/1;}
+  .f-row{grid-template-columns:1fr;}
+}
+
+  /* ══ MOBILE FIRST FIXES ══════════════════════════════════ */
+  @media (max-width: 640px) {
+    .page-wrap  { padding: 1.2rem .85rem 4rem; gap: 1.2rem; }
+    .page-heading-title { font-size: 1.5rem; }
+
+    /* Floor room: square-ish on small screens */
+    .floor-room { aspect-ratio: 1 / 1.1; }
+
+    /* Panel */
+    .panel { position: static; }
+    .panel-top  { padding: 1rem; }
+    .panel-body { padding: 1rem; }
+    .panel-top-title { font-size: 1.05rem; }
+
+    /* Form */
+    .f-row { grid-template-columns: 1fr; gap: .7rem; }
+    .f-group { margin-bottom: .75rem; }
+    .ppl-row { height: 34px; }
+    .ppl-btn  { width: 28px; height: 28px; }
+    .ppl-n    { font-size: 1.1rem; }
+
+    /* Slots */
+    .slot { padding: .32rem .6rem; font-size: .8rem; }
+
+    /* Chip */
+    .tbl-chip-num { font-size: 1.3rem; }
+    .tbl-chip-info { font-size: .82rem; }
+
+    /* Legend */
+    .legend { gap: .8rem; font-size: .75rem; }
+    .legend-pip { width: 8px; height: 8px; }
+
+    /* Toast */
+    .toast { font-size: .82rem; padding: .7rem 1.2rem; }
+
+    /* Log */
+    .log-item { font-size: .82rem; }
+  }
+
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo-wrap">
+    <div class="logo-crest">R</div>
+    <div>
+      <div class="logo-name">Le Reginelle</div>
+      <div class="logo-sub">Pizzeria · Via L. Da Vinci, Verona</div>
+    </div>
+  </a>
+  <a href="index.html" class="back-link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    Home
+  </a>
+</header>
+
+<div class="page-wrap">
+
+  <!-- LEFT: floor plan -->
+  <div>
+    <div class="page-heading">
+      <div class="page-heading-label">Sala interna</div>
+      <h1 class="page-heading-title">Prenota il tuo tavolo</h1>
+    </div>
+
+    <div class="legend">
+      <div class="legend-item"><div class="legend-pip pip-free"></div>Disponibile</div>
+      <div class="legend-item"><div class="legend-pip pip-booked"></div>Occupato</div>
+      <div class="legend-item"><div class="legend-pip pip-selected"></div>Selezionato</div>
+    </div>
+
+    <div class="floor-wrap">
+      <div class="floor-room" id="room">
+
+        <!-- Entrance -->
+        <div class="room-entrance"><span class="room-entrance-label">Entrata</span></div>
+
+        <!-- Windows left -->
+        <div class="room-window" style="top:7%;left:0;width:1.5%;height:10%;border-radius:0 3px 3px 0;"></div>
+        <div class="room-window" style="top:23%;left:0;width:1.5%;height:10%;border-radius:0 3px 3px 0;"></div>
+        <!-- Windows right -->
+        <div class="room-window" style="top:7%;right:0;width:1.5%;height:10%;border-radius:3px 0 0 3px;"></div>
+        <div class="room-window" style="top:23%;right:0;width:1.5%;height:10%;border-radius:3px 0 0 3px;"></div>
+
+        <!-- Kitchen -->
+        <div class="room-kitchen">
+          <span class="room-kitchen-label">Cucina</span>
+        </div>
+
+        <!-- Tables rendered by JS -->
+        <div id="tablesEl"></div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: panel -->
+  <div>
+    <div class="panel">
+      <div class="panel-top">
+        <div class="panel-top-label">Prenotazione</div>
+        <div class="panel-top-title" id="panelTitle">Scegli un tavolo</div>
+      </div>
+      <div class="panel-body">
+
+        <div class="p-empty" id="pEmpty">
+          <span class="p-empty-icon">🪑</span>
+          Tocca un tavolo disponibile nella planimetria
+        </div>
+
+        <div class="tbl-chip" id="tblChip">
+          <div class="tbl-chip-num" id="chipNum">1</div>
+          <div class="tbl-chip-info" id="chipInfo">—</div>
+        </div>
+
+        <div class="form-section" id="formSection">
+
+          <div class="f-row">
+            <div class="f-group">
+              <label class="f-label">Nome *</label>
+              <input type="text" id="fNome" placeholder="Mario">
+              <div class="err-msg" id="e-nome"></div>
+            </div>
+            <div class="f-group">
+              <label class="f-label">Cognome *</label>
+              <input type="text" id="fCognome" placeholder="Rossi">
+              <div class="err-msg" id="e-cognome"></div>
+            </div>
+          </div>
+
+          <div class="f-group">
+            <label class="f-label">Persone *</label>
+            <div class="ppl-row">
+              <button class="ppl-btn" onclick="changePpl(-1)">−</button>
+              <span class="ppl-n" id="pplN">2</span>
+              <button class="ppl-btn" onclick="changePpl(1)">+</button>
+              <span class="ppl-cap" id="pplCap">max —</span>
+            </div>
+            <div class="err-msg" id="e-ppl"></div>
+          </div>
+
+          <div class="f-group">
+            <label class="f-label">Data *</label>
+            <input type="date" id="fData" onchange="buildSlots()">
+            <div class="err-msg" id="e-data"></div>
+          </div>
+
+          <div class="f-group">
+            <label class="f-label">Orario *</label>
+            <div class="slots" id="slotsEl"></div>
+            <div class="err-msg" id="e-time"></div>
+          </div>
+
+          <button class="btn-book" onclick="book()">Conferma prenotazione</button>
+
+        </div>
+
+        <div class="log" id="logEl">
+          <div class="log-label">Prenotazioni confermate</div>
+          <div id="logList"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── DATA ────────────────────────────────────────────────
+// top/left = center % of room, size = diameter %
+const TABLES = [
+  // Row 1 — near windows
+  { id:1, cap:2, shape:'round', size:10, top:24, left:12 },
+  { id:2, cap:2, shape:'round', size:10, top:24, left:28 },
+  { id:3, cap:4, shape:'round', size:14, top:24, left:47 },
+  { id:4, cap:4, shape:'round', size:14, top:24, left:65 },
+  { id:5, cap:2, shape:'round', size:10, top:24, left:83 },
+  // Row 2 — center
+  { id:6,  cap:2, shape:'round', size:10, top:53, left:10  },
+  { id:7,  cap:6, shape:'rect',  w:18, h:11, top:52, left:31 },
+  { id:8,  cap:4, shape:'round', size:14, top:52, left:52 },
+  { id:9,  cap:6, shape:'rect',  w:18, h:11, top:52, left:73 },
+  { id:10, cap:4, shape:'round', size:14, top:52, left:90 },
+];
+
+// Some pre-occupied for realism
+const PREBOOKED = new Set([3, 7]);
+
+let sel   = null;   // selected table id
+let ppl   = 2;
+let time  = null;
+const confirmed = {};  // id → booking data
+
+// ─── RENDER ──────────────────────────────────────────────
+function render() {
+  const el = document.getElementById('tablesEl');
+  el.innerHTML = '';
+
+  TABLES.forEach(t => {
+    const isBooked   = PREBOOKED.has(t.id) || confirmed[t.id];
+    const isSelected = t.id === sel;
+    const state = isSelected ? 'tbl-selected' : isBooked ? 'tbl-booked' : 'tbl-free';
+
+    const div = document.createElement('div');
+    div.className = `tbl ${t.shape === 'round' ? 'tbl-round' : 'tbl-rect'} ${state}`;
+
+    if(t.shape === 'round') {
+      div.style.cssText = `
+        width:${t.size}%; height:${t.size}%;
+        top:${t.top}%; left:${t.left}%;
+      `;
+    } else {
+      div.style.cssText = `
+        width:${t.w}%; height:${t.h}%;
+        top:${t.top}%; left:${t.left}%;
+      `;
+    }
+
+    // Font size relative to table size
+    const fs = t.shape === 'round'
+      ? Math.max(0.6, t.size * 0.09)
+      : Math.max(0.65, t.h * 0.09);
+
+    div.innerHTML = `<span class="tbl-num" style="font-size:${fs}rem">${t.id}</span>`;
+
+    if(!isBooked) div.onclick = () => selectTable(t.id);
+
+    el.appendChild(div);
+  });
+}
+
+// ─── SELECT ──────────────────────────────────────────────
+function selectTable(id) {
+  sel  = id;
+  ppl  = 2;
+  time = null;
+  const t = TABLES.find(x => x.id === id);
+
+  // Panel
+  document.getElementById('pEmpty').style.display = 'none';
+  document.getElementById('panelTitle').textContent = `Tavolo ${id}`;
+  document.getElementById('tblChip').classList.add('on');
+  document.getElementById('chipNum').textContent  = id;
+  document.getElementById('chipInfo').textContent = `${t.cap} ${t.cap===1?'posto':'posti'} · ${t.shape==='round'?'rotondo':'rettangolare'}`;
+  document.getElementById('formSection').classList.add('on');
+  document.getElementById('pplN').textContent   = ppl;
+  document.getElementById('pplCap').textContent = `max ${t.cap}`;
+
+  // Date → today
+  const inp = document.getElementById('fData');
+  const now = new Date().toISOString().split('T')[0];
+  inp.min   = now;
+  inp.value = now;
+
+  // Clear errors
+  ['nome','cognome','ppl','data','time'].forEach(k => {
+    document.getElementById('e-'+k).textContent = '';
+  });
+  document.getElementById('fNome').classList.remove('err');
+  document.getElementById('fCognome').classList.remove('err');
+
+  buildSlots();
+  render();
+
+  if(window.innerWidth <= 820)
+    document.querySelector('.panel').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// ─── PPL ─────────────────────────────────────────────────
+function changePpl(d) {
+  if(!sel) return;
+  const max = TABLES.find(x => x.id === sel).cap;
+  ppl = Math.min(max, Math.max(1, ppl + d));
+  document.getElementById('pplN').textContent = ppl;
+  document.getElementById('e-ppl').textContent = '';
+}
+
+// ─── SLOTS ───────────────────────────────────────────────
+function buildSlots() {
+  const dateStr = document.getElementById('fData').value;
+  const dow = dateStr ? new Date(dateStr).getDay() : new Date().getDay();
+  // 0=Dom 6=Sab
+
+  const slotsEl = document.getElementById('slotsEl');
+  slotsEl.innerHTML = '';
+  time = null;
+
+  let sets = [];
+  if(dow === 0) {                        // Domenica – solo pranzo
+    sets.push({ from:720, to:810 });
+  } else if(dow === 6) {                 // Sabato – pranzo + cena
+    sets.push({ from:720, to:810, label:'Pranzo' });
+    sets.push({ from:1080, to:1320, label:'Cena' });
+  } else {                               // Lun-Ven – solo cena
+    sets.push({ from:1080, to:1320 });
+  }
+
+  if(sets.every(s => s.from > s.to)) {
+    slotsEl.innerHTML = '<span class="no-slots">Siamo chiusi questo giorno.</span>';
+    return;
+  }
+
+  sets.forEach((s, si) => {
+    if(s.label) {
+      const lbl = document.createElement('div');
+      lbl.style.cssText='width:100%;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--olive);padding:.2rem 0;';
+      lbl.textContent = s.label;
+      slotsEl.appendChild(lbl);
+    }
+    for(let m = s.from; m <= s.to; m += 30) {
+      const h = String(Math.floor(m/60)).padStart(2,'0');
+      const mm = String(m%60).padStart(2,'0');
+      const label = `${h}:${mm}`;
+      const btn = document.createElement('div');
+      btn.className = 'slot';
+      btn.textContent = label;
+      btn.onclick = () => {
+        time = label;
+        document.querySelectorAll('.slot').forEach(e => e.classList.remove('on'));
+        btn.classList.add('on');
+        document.getElementById('e-time').textContent = '';
+      };
+      slotsEl.appendChild(btn);
+    }
+    if(si < sets.length-1) {
+      const div = document.createElement('div');
+      div.className = 'slot-divider';
+      slotsEl.appendChild(div);
+    }
+  });
+}
+
+// ─── BOOK ────────────────────────────────────────────────
+function book() {
+  let ok = true;
+  const nome    = document.getElementById('fNome').value.trim();
+  const cognome = document.getElementById('fCognome').value.trim();
+  const data    = document.getElementById('fData').value;
+
+  const v = (id,val,msg) => {
+    if(!val){ document.getElementById('e-'+id).textContent=msg; document.getElementById('f'+id.charAt(0).toUpperCase()+id.slice(1))?.classList.add('err'); ok=false; }
+    else    { document.getElementById('e-'+id).textContent=''; document.getElementById('f'+id.charAt(0).toUpperCase()+id.slice(1))?.classList.remove('err'); }
+  };
+
+  v('nome',    nome,    'Inserisci il nome');
+  v('cognome', cognome, 'Inserisci il cognome');
+  v('data',    data,    'Scegli una data');
+  if(!time){ document.getElementById('e-time').textContent='Seleziona un orario'; ok=false; }
+  else       document.getElementById('e-time').textContent='';
+
+  if(!ok) return;
+
+  const id = sel;
+  confirmed[id] = { nome, cognome, ppl, data, time };
+
+  // Reset
+  sel = null;
+  document.getElementById('pEmpty').style.display = 'flex';
+  document.getElementById('tblChip').classList.remove('on');
+  document.getElementById('formSection').classList.remove('on');
+  document.getElementById('panelTitle').textContent = 'Scegli un tavolo';
+  document.getElementById('fNome').value    = '';
+  document.getElementById('fCognome').value = '';
+
+  render();
+  buildLog();
+  toast(`✓ Tavolo ${id} prenotato · ${nome} ${cognome} · ore ${time}`);
+}
+
+// ─── LOG ─────────────────────────────────────────────────
+function buildLog() {
+  const entries = Object.entries(confirmed);
+  if(!entries.length) return;
+  document.getElementById('logEl').classList.add('on');
+  document.getElementById('logList').innerHTML = entries.map(([id,b]) =>
+    `<div class="log-item">
+      <span class="log-t">T${id}</span>
+      <span class="log-d">${b.nome} ${b.cognome} · ${b.ppl}p · ${b.time}</span>
+    </div>`
+  ).join('');
+}
+
+// ─── TOAST ───────────────────────────────────────────────
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('on');
+  setTimeout(() => el.classList.remove('on'), 3200);
+}
+
+// ─── INIT ────────────────────────────────────────────────
+render();
+</script>
+
+<script>
+function toggleNav() {
+  var nav = document.getElementById('navOverlay');
+  if(nav) nav.classList.toggle('open');
+}
+document.addEventListener('DOMContentLoaded', function() {
+  // Scroll reveal
+  var reveals = document.querySelectorAll('.reveal');
+  if(reveals.length) {
+    var obs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) { if(e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    reveals.forEach(function(el) { obs.observe(el); });
+  }
+  // Logo da admin
+  var logo = localStorage.getItem('rg_logo');
+  if(logo) {
+    document.querySelectorAll('.logo-crest').forEach(function(el) {
+      el.innerHTML = '<img src="' + logo + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
+    });
+  }
+});
+</script>
+</body>
+</html>
